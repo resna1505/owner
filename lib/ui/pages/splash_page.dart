@@ -31,7 +31,7 @@ class _SplashPageState extends State<SplashPage> {
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage(
-                'assets/img_logo.png',
+                'assets/logo_uniba.png',
               ),
             ),
           ),

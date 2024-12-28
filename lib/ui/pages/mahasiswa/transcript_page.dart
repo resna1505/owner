@@ -12,7 +12,7 @@ class TranscriptPage extends StatefulWidget {
 
 class _TranscriptPageState extends State<TranscriptPage> {
   _TranscriptPageState() {
-    _selectedVal = _productSizeList[0];
+    // _selectedVal = _productSizeList[0];
   }
 
   // final _productController = TextEditingController();
@@ -20,15 +20,15 @@ class _TranscriptPageState extends State<TranscriptPage> {
   // bool? _topProduct = false;
   // ProductTypeEnum? _productTypeEnum;
 
-  final _productSizeList = [
-    '2021/2022 Genap',
-    '2021/2022 Gasal',
-    '2020/2021 Genap',
-    '2020/2021 Gasal',
-    '2019/2020 Genap',
-    '2019/2020 Gasal',
-  ];
-  String _selectedVal = "2021/2022 Genap";
+  // final _productSizeList = [
+  //   '2021/2022 Genap',
+  //   '2021/2022 Gasal',
+  //   '2020/2021 Genap',
+  //   '2020/2021 Gasal',
+  //   '2019/2020 Genap',
+  //   '2019/2020 Gasal',
+  // ];
+  // String _selectedVal = "2021/2022 Genap";
 
   @override
   Widget build(BuildContext context) {
@@ -44,43 +44,43 @@ class _TranscriptPageState extends State<TranscriptPage> {
         ),
       ),
       body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DropdownButtonFormField(
-                  value: _selectedVal,
-                  items: _productSizeList
-                      .map(
-                        (e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (val) {
-                    setState(
-                      () {
-                        _selectedVal = val as String;
-                      },
-                    );
-                  },
-                  icon: Icon(
-                    Icons.arrow_drop_down_circle,
-                    color: purpleColor,
-                  ),
-                  // dropdownColor: Colors.blue.shade50,
-                  decoration: const InputDecoration(
-                    labelText: 'Pilih Periode',
-                    border: InputBorder.none,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Row(
+        children: const [
+          // Container(
+          //   padding: const EdgeInsets.all(12),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       DropdownButtonFormField(
+          //         value: _selectedVal,
+          //         items: _productSizeList
+          //             .map(
+          //               (e) => DropdownMenuItem(
+          //                 child: Text(e),
+          //                 value: e,
+          //               ),
+          //             )
+          //             .toList(),
+          //         onChanged: (val) {
+          //           setState(
+          //             () {
+          //               _selectedVal = val as String;
+          //             },
+          //           );
+          //         },
+          //         icon: Icon(
+          //           Icons.arrow_drop_down_circle,
+          //           color: purpleColor,
+          //         ),
+          //         // dropdownColor: Colors.blue.shade50,
+          //         decoration: const InputDecoration(
+          //           labelText: 'Pilih Periode',
+          //           border: InputBorder.none,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          Row(
             children: [
               HeaderNilai(
                 title: 'TOTAL SKS',
@@ -94,7 +94,7 @@ class _TranscriptPageState extends State<TranscriptPage> {
               )
             ],
           ),
-          const SizedBox(
+          SizedBox(
             height: 600,
             child: SingleChildScrollView(
               child: Column(
