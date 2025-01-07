@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http; // Tambahkan paket http
-import 'package:kampus/blocs/discount_approve/discount_approve_bloc.dart';
-import 'package:kampus/blocs/discount_mahasiswa/discount_mahasiswa_bloc.dart';
+import 'package:kampus/blocs/beasiswa_approve/beasiswa_approve_bloc.dart';
+import 'package:kampus/blocs/beasiswa_non_approve/beasiswa_non_approve_bloc.dart';
 import 'package:kampus/shared/shared_methods.dart';
 import 'package:kampus/shared/theme.dart';
 import 'package:kampus/ui/widgets/buttons.dart';
-import 'package:kampus/ui/widgets/list_paid.dart';
-import 'package:kampus/ui/widgets/list_unpaid.dart';
+import 'package:kampus/ui/widgets/list_approve_beasiswa.dart';
+import 'package:kampus/ui/widgets/list_nonapprove_beasiswa.dart';
 
 class CardMahasiswaPage extends StatefulWidget {
   const CardMahasiswaPage({
@@ -37,13 +37,19 @@ class _CardMahasiswaPageState extends State<CardMahasiswaPage> {
     try {
       final response = await http.post(
         Uri.parse(
-            'https://ams-api-dev.univbatam.ac.id/index.php/owner/prosesapprovaldiskon'),
+            'https://ams-api-dev.univbatam.ac.id/index.php/owner/prosesapprovalbeasiswa'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(payload),
       );
 
       if (response.statusCode == 200) {
         showSnackbar(context, 'Success', "Data sent successfully!", 'success');
+        await Future.delayed(Duration(seconds: 2));
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home-page-mahasiswa',
+          (route) => false,
+        );
       } else {
         showSnackbar(context, 'Error', response.body, 'error');
       }
@@ -86,16 +92,17 @@ class _CardMahasiswaPageState extends State<CardMahasiswaPage> {
           children: [
             BlocProvider(
               create: (context) =>
-                  DiscountMahasiswaBloc()..add(DiscountMahasiswatGet()),
-              child: BlocBuilder<DiscountMahasiswaBloc, DiscountMahasiswaState>(
+                  BeasiswaNonApproveBloc()..add(BeasiswaNonApproveGet()),
+              child:
+                  BlocBuilder<BeasiswaNonApproveBloc, BeasiswaNonApproveState>(
                 builder: (context, state) {
-                  if (state is DiscountMahasiswaLoading) {
+                  if (state is BeasiswaNonApproveLoading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is DiscountMahasiswaSuccess) {
+                  } else if (state is BeasiswaNonApproveSuccess) {
                     // Filter data berdasarkan _searchText
-                    final filteredData = state.discount.where((discount) {
-                      final discountName = discount.nama ?? '';
-                      return discountName
+                    final filteredData = state.beasiswaNon.where((beasiswaNon) {
+                      final beasiswaNonName = beasiswaNon.nama ?? '';
+                      return beasiswaNonName
                           .toLowerCase()
                           .contains(_searchText.toLowerCase());
                     }).toList();
@@ -122,10 +129,23 @@ class _CardMahasiswaPageState extends State<CardMahasiswaPage> {
                         ),
                         Expanded(
                           child: ListView(
-                            children: filteredData.map((discountMethod) {
-                              final id = '${discountMethod.approvalKey}';
-                              return ListUnpaid(
-                                discountMethod: discountMethod,
+                            children: filteredData.map((beasiswaNonMethod) {
+                              final id = '${beasiswaNonMethod.approvalKey}';
+                              // return ListUnpaid(
+                              //   discountMethod: discountMethod,
+                              //   isChecked: _checkedItems.contains(id),
+                              //   onChanged: (isChecked) {
+                              //     setState(() {
+                              //       if (isChecked == true) {
+                              //         _checkedItems.add(id);
+                              //       } else {
+                              //         _checkedItems.remove(id);
+                              //       }
+                              //     });
+                              //   },
+                              // );
+                              return ListNonApproveBeasiswa(
+                                beasiswaNonMethod: beasiswaNonMethod,
                                 isChecked: _checkedItems.contains(id),
                                 onChanged: (isChecked) {
                                   setState(() {
@@ -197,14 +217,14 @@ class _CardMahasiswaPageState extends State<CardMahasiswaPage> {
             ),
             BlocProvider(
               create: (context) =>
-                  DiscountApproveBloc()..add(DiscountApproveGet()),
-              child: BlocBuilder<DiscountApproveBloc, DiscountApproveState>(
+                  BeasiswaApproveBloc()..add(BeasiswaApproveGet()),
+              child: BlocBuilder<BeasiswaApproveBloc, BeasiswaApproveState>(
                 builder: (context, state) {
-                  if (state is DiscountApproveLoading) {
+                  if (state is BeasiswaApproveLoading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is DiscountApproveSuccess) {
+                  } else if (state is BeasiswaApproveSuccess) {
                     final filteredData =
-                        state.discountApprove.where((discount) {
+                        state.beasiswaApprove.where((discount) {
                       final discountName = discount.nama ?? '';
                       return discountName
                           .toLowerCase()
@@ -235,8 +255,8 @@ class _CardMahasiswaPageState extends State<CardMahasiswaPage> {
                         Expanded(
                           child: ListView(
                             children: filteredData.map((discountApprove) {
-                              return ListPaid(
-                                  discountApproveMethod: discountApprove);
+                              return ListApproveBeasiswa(
+                                  beasiswaApproveMethod: discountApprove);
                             }).toList(),
                           ),
                         ),

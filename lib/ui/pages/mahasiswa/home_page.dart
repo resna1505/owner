@@ -1444,7 +1444,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
             ),
           ),
           const SizedBox(
-            height: 8,
+            height: 16,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1506,9 +1506,6 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                 },
               ),
             ],
-          ),
-          const SizedBox(
-            height: 12,
           ),
           // Row(
           //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1572,7 +1569,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
             padding: const EdgeInsets.only(
               left: 24,
               right: 24,
-              top: 24,
+              top: 12,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

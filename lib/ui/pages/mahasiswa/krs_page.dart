@@ -1,159 +1,311 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http; // Tambahkan paket http
+import 'package:kampus/blocs/beasiswa_approve/beasiswa_approve_bloc.dart';
+import 'package:kampus/blocs/krs_non_approve/krs_non_approve_bloc.dart';
+import 'package:kampus/shared/shared_methods.dart';
 import 'package:kampus/shared/theme.dart';
-import 'package:kampus/ui/widgets/header_nilai.dart';
-import 'package:kampus/ui/widgets/list_krs.dart';
+import 'package:kampus/ui/widgets/buttons.dart';
+import 'package:kampus/ui/widgets/list_approve_beasiswa.dart';
+import 'package:kampus/ui/widgets/list_nonapprove_krs.dart';
 
 class KRSPage extends StatefulWidget {
-  const KRSPage({super.key});
+  const KRSPage({
+    super.key,
+  });
 
   @override
   State<KRSPage> createState() => _KRSPageState();
 }
 
 class _KRSPageState extends State<KRSPage> {
-  _KRSPageState() {
-    _selectedVal = _productSizeList[0];
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = "";
+  List<String> _checkedItems = [];
+
+  Future<void> _sendData() async {
+    if (_checkedItems.isEmpty) {
+      showSnackbar(context, 'Info', 'No items selected!', 'info');
+      return;
+    }
+
+    final payload = {
+      "checklistData": _checkedItems.map((id) => {"approvalkey": id}).toList(),
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'https://ams-api-dev.univbatam.ac.id/index.php/owner/prosesapprovalkrs'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 200) {
+        showSnackbar(context, 'Success', "Data sent successfully!", 'success');
+        await Future.delayed(Duration(seconds: 2));
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home-page-mahasiswa',
+          (route) => false,
+        );
+      } else {
+        showSnackbar(context, 'Error', response.body, 'error');
+      }
+    } catch (e) {
+      showSnackbar(context, 'Error', e.toString(), 'error');
+    }
   }
-
-  // final _productController = TextEditingController();
-  // final _productDesController = TextEditingController();
-  // bool? _topProduct = false;
-  // ProductTypeEnum? _productTypeEnum;
-
-  final _productSizeList = [
-    '2021/2022 Genap',
-    '2021/2022 Gasal',
-    '2020/2021 Genap',
-    '2020/2021 Gasal',
-    '2019/2020 Genap',
-    '2019/2020 Gasal',
-  ];
-  String _selectedVal = "2021/2022 Genap";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: whiteColor,
-      appBar: AppBar(
-        elevation: 0.5,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
         backgroundColor: whiteColor,
-        title: Text(
-          'KRS',
-          style: blackTextStyle.copyWith(
-            fontSize: 18,
-            fontWeight: semiBold,
-          ),
-        ),
-      ),
-      body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DropdownButtonFormField(
-                  value: _selectedVal,
-                  items: _productSizeList
-                      .map(
-                        (e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (val) {
-                    setState(
-                      () {
-                        _selectedVal = val as String;
-                      },
-                    );
-                  },
-                  icon: Icon(
-                    Icons.arrow_drop_down_circle,
-                    color: purpleColor,
-                  ),
-                  // dropdownColor: Colors.blue.shade50,
-                  decoration: const InputDecoration(
-                    labelText: 'Pilih Periode',
-                    border: InputBorder.none,
-                  ),
-                ),
-              ],
+        appBar: AppBar(
+          elevation: 0.5,
+          title: Text(
+            'KRS',
+            style: blackTextStyle.copyWith(
+              fontSize: 18,
+              fontWeight: semiBold,
             ),
           ),
-          const Row(
-            children: [
-              HeaderNilai(
-                title: 'SKS DIAMBIL',
-                value: '21',
-                color: 1,
+          bottom: TabBar(
+            labelColor: purpleColor,
+            unselectedLabelColor: Colors.grey,
+            tabs: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                child: const Text('Non Approve'),
               ),
-              HeaderNilai(
-                title: 'BATAS SKS',
-                value: '24',
-                color: 2,
-              )
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                child: const Text('Approve'),
+              ),
             ],
           ),
-          const SizedBox(
-            height: 550,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListKrs(
-                    title: 'FINAL PROJECT SOFTWARE 1',
-                    code: '155KB557',
-                    sks: ' - 1SKS',
-                    time: 'Senin, 18:30 s.d 20:00',
-                  ),
-                  ListKrs(
-                    title: 'FINAL PROJECT SOFTWARE 2',
-                    code: '155KB557',
-                    sks: ' - 1SKS',
-                    time: 'Senin, 20:10 s.d 21:40',
-                  ),
-                  ListKrs(
-                    title: 'MATEMATIKA DISKRIT',
-                    code: '155KB558',
-                    sks: ' - 2SKS',
-                    time: 'SELASA, 18:30 s.d 20:00',
-                  ),
-                  ListKrs(
-                    title: 'HUKUM ISLAM',
-                    code: '155KB559',
-                    sks: ' - 4SKS',
-                    time: 'SELASA, 20:10 s.d 21:40',
-                  ),
-                  ListKrs(
-                    title: 'SISTEM BASIS DATA LANJUTAN',
-                    code: '155KB512',
-                    sks: ' - 3SKS',
-                    time: 'RABU, 18:30 s.d 20:00',
-                  ),
-                  ListKrs(
-                    title: 'GRAFIKA KOMPUTER',
-                    code: '155KB557',
-                    sks: ' - 1SKS',
-                    time: 'KAMIS, 20:10 s.d 21:40',
-                  ),
-                  ListKrs(
-                    title: 'ALGORITMA PEMROGRAMAN',
-                    code: '155KB557',
-                    sks: ' - 4SKS',
-                    time: 'JUMAT, 18:30 s.d 20:00',
-                  ),
-                  ListKrs(
-                    title: 'SISTEM OPERASI',
-                    code: '155KB557',
-                    sks: ' - 2SKS',
-                    time: 'JUMAT, 20:10 s.d 21:40',
-                  ),
-                ],
+        ),
+        body: TabBarView(
+          children: [
+            BlocProvider(
+              create: (context) => KrsNonApproveBloc()..add(KrsNonApproveGet()),
+              child: BlocBuilder<KrsNonApproveBloc, KrsNonApproveState>(
+                builder: (context, state) {
+                  if (state is KrsNonApproveLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is KrsNonApproveSuccess) {
+                    final filteredData = state.krs.where((krsNon) {
+                      final krsNonName = krsNon.nama ?? '';
+                      return krsNonName
+                          .toLowerCase()
+                          .contains(_searchText.toLowerCase());
+                    }).toList();
+
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Search by name',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                _searchText = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView(
+                            children: filteredData.map((krsNonMethod) {
+                              final id = '${krsNonMethod.approvalKey}';
+                              // return ListNonApproveBeasiswa(
+                              //   beasiswaNonMethod: beasiswaNonMethod,
+                              //   isChecked: _checkedItems.contains(id),
+                              //   onChanged: (isChecked) {
+                              //     setState(() {
+                              //       if (isChecked == true) {
+                              //         _checkedItems.add(id);
+                              //       } else {
+                              //         _checkedItems.remove(id);
+                              //       }
+                              //     });
+                              //   },
+                              // );
+                              return ListNonApproveKrs(
+                                krsNonMethod: krsNonMethod,
+                                isChecked: _checkedItems.contains(id),
+                                onChanged: (isChecked) {
+                                  setState(() {
+                                    if (isChecked == true) {
+                                      _checkedItems.add(id);
+                                    } else {
+                                      _checkedItems.remove(id);
+                                    }
+                                  });
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: CustomFilledButton(
+                            title: 'Approval',
+                            width: double.infinity,
+                            onPressed: _sendData,
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            margin: const EdgeInsets.only(top: 12),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/img_no_data.png'),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text.rich(
+                            TextSpan(
+                              text: 'Oops! Sepertinya kamu tidak\nmemiliki ',
+                              style: blackTextStyle.copyWith(fontSize: 12),
+                              children: [
+                                TextSpan(
+                                  text: 'Data Mahasiswa',
+                                  style: blueTextStyle.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' hari ini',
+                                  style: blackTextStyle.copyWith(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
               ),
             ),
-          )
-        ],
+            BlocProvider(
+              create: (context) =>
+                  BeasiswaApproveBloc()..add(BeasiswaApproveGet()),
+              child: BlocBuilder<BeasiswaApproveBloc, BeasiswaApproveState>(
+                builder: (context, state) {
+                  if (state is BeasiswaApproveLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is BeasiswaApproveSuccess) {
+                    final filteredData =
+                        state.beasiswaApprove.where((discount) {
+                      final discountName = discount.nama ?? '';
+                      return discountName
+                          .toLowerCase()
+                          .contains(_searchText.toLowerCase());
+                    }).toList();
+
+                    return Column(
+                      children: [
+                        // Search Bar
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Search by name',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                _searchText = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView(
+                            children: filteredData.map((discountApprove) {
+                              return ListApproveBeasiswa(
+                                  beasiswaApproveMethod: discountApprove);
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            margin: const EdgeInsets.only(top: 12),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/img_no_data.png'),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text.rich(
+                            TextSpan(
+                              text: 'Oops! Sepertinya kamu tidak\nmemiliki ',
+                              style: blackTextStyle.copyWith(fontSize: 12),
+                              children: [
+                                TextSpan(
+                                  text: 'Data Mahasiswa',
+                                  style: blueTextStyle.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' hari ini',
+                                  style: blackTextStyle.copyWith(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
