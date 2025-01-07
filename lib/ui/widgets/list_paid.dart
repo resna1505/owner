@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:kampus/models/discount_approve_model.dart';
+import 'package:kampus/shared/shared_methods.dart';
 import 'package:kampus/shared/theme.dart';
 
 class ListPaid extends StatelessWidget {
-  final String komponen;
-  final String biaya;
-  final String tanggal;
+  // final String komponen;
+  // final String biaya;
+  // final String tanggal;
+  final DiscountApproveModel discountApproveMethod;
 
   const ListPaid({
     super.key,
-    required this.komponen,
-    required this.biaya,
-    required this.tanggal,
+    // required this.komponen,
+    // required this.biaya,
+    // required this.tanggal,
+    required this.discountApproveMethod,
   });
 
   @override
@@ -18,6 +22,9 @@ class ListPaid extends StatelessWidget {
     return Column(
       children: [
         Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(color: greySoftColor),
@@ -29,20 +36,22 @@ class ListPaid extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    komponen,
-                    style: blackTextStyle.copyWith(
-                      fontSize: 12,
-                      fontWeight: regular,
+                  Expanded(
+                    child: Text(
+                      discountApproveMethod.nama ?? '',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 12,
+                        fontWeight: semiBold,
+                      ),
                     ),
                   ),
                   Text(
-                    biaya,
+                    ' (${discountApproveMethod.id})',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
                       fontWeight: semiBold,
                     ),
-                  )
+                  ),
                 ],
               ),
               const SizedBox(
@@ -51,22 +60,66 @@ class ListPaid extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Tanggal Bayar : ',
+                    'Komponen : ',
                     style: greyTextStyle.copyWith(
-                      fontSize: 10,
+                      fontSize: 12,
                     ),
                   ),
                   Text(
-                    tanggal,
-                    style: redTextStyle.copyWith(
-                      fontSize: 10,
-                      fontWeight: semiBold,
+                    discountApproveMethod.komponen ?? '',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
                     ),
-                  )
+                  ),
                 ],
               ),
-              const SizedBox(
-                height: 8,
+              Row(
+                children: [
+                  Text(
+                    'Jurusan : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    discountApproveMethod.namaProdi ?? '',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Persen : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    '${discountApproveMethod.persenBeasiswa ?? 0}%',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Rupiah : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    formatCurrency(discountApproveMethod.rupiahBeasiswa ?? 0),
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

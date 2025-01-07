@@ -38,44 +38,6 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(
                   height: 40,
                 ),
-                Row(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      margin: const EdgeInsets.only(
-                        right: 10,
-                        left: 155,
-                      ),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: blueDarkColor,
-                      ),
-                    ),
-                    Container(
-                      width: 12,
-                      height: 12,
-                      margin: const EdgeInsets.only(
-                        right: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: blueSoftColor,
-                      ),
-                    ),
-                    Container(
-                      width: 12,
-                      height: 12,
-                      margin: const EdgeInsets.only(
-                        right: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: blueSoftColor,
-                      ),
-                    ),
-                  ],
-                )
               ],
             ),
           ),
@@ -126,7 +88,7 @@ class LoginPage extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          'Student Apps | Batam University',
+                          'Owner Apps | Batam University',
                           style: greyTextStyle.copyWith(
                             fontWeight: semiBold,
                             fontSize: 12,
@@ -151,28 +113,28 @@ class LoginPage extends StatelessWidget {
                   title: 'Password',
                   obscureText: true,
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    const Spacer(),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          'Forgot Password',
-                          style: redTextStyle.copyWith(
-                            fontWeight: semiBold,
-                            fontSize: 14,
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                // const SizedBox(
+                //   height: 8,
+                // ),
+                // Row(
+                //   children: [
+                //     const Spacer(),
+                //     const SizedBox(
+                //       height: 8,
+                //     ),
+                //     Column(
+                //       children: [
+                //         Text(
+                //           'Forgot Password',
+                //           style: redTextStyle.copyWith(
+                //             fontWeight: semiBold,
+                //             fontSize: 14,
+                //           ),
+                //         )
+                //       ],
+                //     )
+                //   ],
+                // ),
                 const SizedBox(
                   height: 30,
                 ),

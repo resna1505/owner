@@ -45,11 +45,6 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
     return Scaffold(
       backgroundColor: lightBackgroundColor,
       bottomNavigationBar: BottomAppBar(
-        // color: whiteColor,
-        // shape: const CircularNotchedRectangle(),
-        // clipBehavior: Clip.antiAlias,
-        // notchMargin: 6,
-        // elevation: 0,
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: whiteColor,
@@ -84,22 +79,22 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
               ),
               label: 'Explore',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.qr_code_scanner,
-                color: _currentIndex == 2 ? purpleColor : greyColor,
-                size: 30,
-              ),
-              label: 'absence',
-            ),
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/ic_chat.png',
-                width: 25,
-                color: _currentIndex == 3 ? purpleColor : greyColor,
-              ),
-              label: 'Chats',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(
+            //     Icons.qr_code_scanner,
+            //     color: _currentIndex == 2 ? purpleColor : greyColor,
+            //     size: 30,
+            //   ),
+            //   label: 'absence',
+            // ),
+            // BottomNavigationBarItem(
+            //   icon: Image.asset(
+            //     'assets/ic_chat.png',
+            //     width: 25,
+            //     color: _currentIndex == 3 ? purpleColor : greyColor,
+            //   ),
+            //   label: 'Chats',
+            // ),
             BottomNavigationBarItem(
               icon: Image.asset(
                 'assets/ic_account.png',
@@ -123,7 +118,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
         children: [
           if (_currentIndex == 0) ...[
             buildProfile(context),
-            buildSchedule(),
+            // buildSchedule(),
             // buildToDo(context),
             buildAcademy(context),
             buildCampusNews(context),
@@ -950,79 +945,79 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'RESNA TRI PANGESTU',
+                'Good Morning',
+                style: blackTextStyle.copyWith(
+                  fontSize: 12,
+                ),
+              ),
+              Text(
+                'IBU ELLY ',
                 style: blackTextStyle.copyWith(
                   fontSize: 16,
                   fontWeight: semiBold,
                 ),
               ),
-              Text(
-                'Mahasiswa | Teknik Informatika',
-                style: blackTextStyle.copyWith(
-                  fontSize: 12,
-                ),
-              )
             ],
           ),
-          const Spacer(),
-          Row(
-            children: [
-              // Container(
-              //   width: 24,
-              //   height: 24,
-              //   decoration: const BoxDecoration(
-              //     shape: BoxShape.rectangle,
-              //     image: DecorationImage(
-              //       image: AssetImage(
-              //         'assets/img_profile.png',
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(
-              //   width: 16,
-              // ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/notification-mahasiswa');
-                },
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: purpleColor,
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  child: Icon(
-                    Icons.notifications_none,
-                    color: whiteColor,
-                    size: 18,
-                  ),
-                ),
-              ),
-              // const SizedBox(
-              //   width: 16,
-              // ),
-              // Container(
-              //   width: 24,
-              //   height: 24,
-              //   decoration: BoxDecoration(
-              //     shape: BoxShape.rectangle,
-              //     color: greenColor,
-              //     borderRadius: BorderRadius.circular(4.0),
-              //   ),
-              //   child: Icon(
-              //     Icons.qr_code_scanner,
-              //     color: whiteColor,
-              //     size: 18,
-              //   ),
-              // ),
-            ],
-          ),
-          const SizedBox(
-            width: 16,
-          ),
+          // const Spacer(),
+          // Row(
+          //   children: [
+          //     // Container(
+          //     //   width: 24,
+          //     //   height: 24,
+          //     //   decoration: const BoxDecoration(
+          //     //     shape: BoxShape.rectangle,
+          //     //     image: DecorationImage(
+          //     //       image: AssetImage(
+          //     //         'assets/img_profile.png',
+          //     //       ),
+          //     //     ),
+          //     //   ),
+          //     // ),
+          //     // const SizedBox(
+          //     //   width: 16,
+          //     // ),
+          //     GestureDetector(
+          //       onTap: () {
+          //         Navigator.pushNamed(context, '/notification-mahasiswa');
+          //       },
+          //       child: Container(
+          //         width: 24,
+          //         height: 24,
+          //         decoration: BoxDecoration(
+          //           shape: BoxShape.rectangle,
+          //           color: purpleColor,
+          //           borderRadius: BorderRadius.circular(4.0),
+          //         ),
+          //         child: Icon(
+          //           Icons.notifications_none,
+          //           color: whiteColor,
+          //           size: 18,
+          //         ),
+          //       ),
+          //     ),
+          //     // const SizedBox(
+          //     //   width: 16,
+          //     // ),
+          //     // Container(
+          //     //   width: 24,
+          //     //   height: 24,
+          //     //   decoration: BoxDecoration(
+          //     //     shape: BoxShape.rectangle,
+          //     //     color: greenColor,
+          //     //     borderRadius: BorderRadius.circular(4.0),
+          //     //   ),
+          //     //   child: Icon(
+          //     //     Icons.qr_code_scanner,
+          //     //     color: whiteColor,
+          //     //     size: 18,
+          //     //   ),
+          //     // ),
+          //   ],
+          // ),
+          // const SizedBox(
+          //   width: 16,
+          // ),
         ],
       ),
     );
@@ -1413,9 +1408,24 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
 
   Widget buildAcademy(context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      // padding: const EdgeInsets.symmetric(horizontal: 24),
+      // decoration: BoxDecoration(
+      //   color: whiteColor,
+      // ),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
         color: whiteColor,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 4.0,
+            offset: Offset(0, -2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1440,8 +1450,8 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               HomeAcademyItem(
-                iconUrl: 'assets/ic_ktm.png',
-                title: 'Kartu\nMahasiswa',
+                iconUrl: 'assets/ic_beasiswa1.png',
+                title: 'Beasiswa',
                 color: const Color(0xffFFF1D3),
                 onTap: () {
                   Navigator.pushNamed(context, '/card-mahasiswa');
@@ -1449,7 +1459,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
               ),
               HomeAcademyItem(
                 iconUrl: 'assets/ic_keuangan.png',
-                title: 'Riwayat\nPembayaran',
+                title: 'Diskon',
                 color: const Color(0xffD9F1E4),
                 onTap: () {
                   Navigator.pushNamed(context, '/invoice-payment');
