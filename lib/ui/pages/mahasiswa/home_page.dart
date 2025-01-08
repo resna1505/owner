@@ -1482,22 +1482,6 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               HomeAcademyItem(
-                iconUrl: 'assets/ic_khs.png',
-                title: 'KHS',
-                color: const Color(0xffF5F8FF),
-                onTap: () {
-                  Navigator.pushNamed(context, '/khs');
-                },
-              ),
-              HomeAcademyItem(
-                iconUrl: 'assets/ic_transkrip.png',
-                title: 'Transkrip',
-                color: const Color(0xffEBDBD8),
-                onTap: () {
-                  Navigator.pushNamed(context, '/transcript');
-                },
-              ),
-              HomeAcademyItem(
                 iconUrl: 'assets/ic_nilai.png',
                 title: 'Nilai',
                 color: const Color(0xffC1DAE6),

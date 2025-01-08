@@ -1,178 +1,300 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'package:kampus/blocs/nilai_approve/nilai_approve_bloc.dart';
+import 'package:kampus/blocs/nilai_non_approve/nilai_non_approve_bloc.dart';
+import 'package:kampus/shared/shared_methods.dart';
 import 'package:kampus/shared/theme.dart';
-import 'package:kampus/ui/widgets/list_nilai.dart';
+import 'package:kampus/ui/widgets/buttons.dart';
+import 'package:kampus/ui/widgets/list_approve_nilai.dart';
+import 'package:kampus/ui/widgets/list_nonapprove_nilai.dart';
 
 class AssessmentPage extends StatefulWidget {
-  const AssessmentPage({super.key});
+  const AssessmentPage({
+    super.key,
+  });
 
   @override
   State<AssessmentPage> createState() => _AssessmentPageState();
 }
 
 class _AssessmentPageState extends State<AssessmentPage> {
-  _AssessmentPageState() {
-    _selectedVal = _productSizeList[0];
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = "";
+  List<String> _checkedItems = [];
+
+  Future<void> _sendData() async {
+    if (_checkedItems.isEmpty) {
+      showSnackbar(context, 'Info', 'No items selected!', 'info');
+      return;
+    }
+
+    final payload = {
+      "iduser": "elly",
+      "checklistData": _checkedItems.map((id) => {"approvalkey": id}).toList(),
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'https://ams-api-dev.univbatam.ac.id/index.php/owner/prosesapprovalkrs'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 200) {
+        showSnackbar(context, 'Success', "Data sent successfully!", 'success');
+        await Future.delayed(Duration(seconds: 2));
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home-page-mahasiswa',
+          (route) => false,
+        );
+      } else {
+        showSnackbar(context, 'Error', response.body, 'error');
+      }
+    } catch (e) {
+      showSnackbar(context, 'Error', e.toString(), 'error');
+    }
   }
-
-  // final _productController = TextEditingController();
-  // final _productDesController = TextEditingController();
-  // bool? _topProduct = false;
-  // ProductTypeEnum? _productTypeEnum;
-
-  final _productSizeList = [
-    '2021/2022 Genap',
-    '2021/2022 Gasal',
-    '2020/2021 Genap',
-    '2020/2021 Gasal',
-    '2019/2020 Genap',
-    '2019/2020 Gasal',
-  ];
-  String _selectedVal = "2021/2022 Genap";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: whiteColor,
-      appBar: AppBar(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
         backgroundColor: whiteColor,
-        elevation: 0.5,
-        title: Text(
-          'Nilai',
-          style: blackTextStyle.copyWith(
-            fontSize: 18,
-            fontWeight: semiBold,
+        appBar: AppBar(
+          elevation: 0.5,
+          title: Text(
+            'Nilai',
+            style: blackTextStyle.copyWith(
+              fontSize: 18,
+              fontWeight: semiBold,
+            ),
+          ),
+          bottom: TabBar(
+            labelColor: purpleColor,
+            unselectedLabelColor: Colors.grey,
+            tabs: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                child: const Text('Non Approve'),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                child: const Text('Approve'),
+              ),
+            ],
           ),
         ),
-      ),
-      body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DropdownButtonFormField(
-                  value: _selectedVal,
-                  items: _productSizeList
-                      .map(
-                        (e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
+        body: TabBarView(
+          children: [
+            BlocProvider(
+              create: (context) =>
+                  NilaiNonApproveBloc()..add(NilaiNonApproveGet()),
+              child: BlocBuilder<NilaiNonApproveBloc, NilaiNonApproveState>(
+                builder: (context, state) {
+                  if (state is NilaiNonApproveLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is NilaiNonApproveSuccess) {
+                    final filteredData = state.nilai.where((nilaiNon) {
+                      final nilaiNonName = nilaiNon.nama ?? '';
+                      return nilaiNonName
+                          .toLowerCase()
+                          .contains(_searchText.toLowerCase());
+                    }).toList();
+
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Search by name',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                _searchText = value;
+                              });
+                            },
+                          ),
                         ),
-                      )
-                      .toList(),
-                  onChanged: (val) {
-                    setState(
-                      () {
-                        _selectedVal = val as String;
-                      },
+                        Expanded(
+                          child: ListView(
+                            children: filteredData.map((nilaiNonMethod) {
+                              final id = '${nilaiNonMethod.approvalKey}';
+                              return ListNonApproveNilai(
+                                nilaiNonMethod: nilaiNonMethod,
+                                isChecked: _checkedItems.contains(id),
+                                onChanged: (isChecked) {
+                                  setState(() {
+                                    if (isChecked == true) {
+                                      _checkedItems.add(id);
+                                    } else {
+                                      _checkedItems.remove(id);
+                                    }
+                                  });
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: CustomFilledButton(
+                            title: 'Approval',
+                            width: double.infinity,
+                            onPressed: _sendData,
+                          ),
+                        ),
+                      ],
                     );
-                  },
-                  icon: Icon(
-                    Icons.arrow_drop_down_circle,
-                    color: purpleColor,
-                  ),
-                  // dropdownColor: Colors.blue.shade50,
-                  decoration: const InputDecoration(
-                    labelText: 'Pilih Periode',
-                    border: InputBorder.none,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 590,
-            child: SingleChildScrollView(
-              // scrollDirection: Axis.vertical,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                child: const Column(
-                  children: [
-                    ListNilai(
-                      code: '155KB136',
-                      sks: '1 ',
-                      title: 'PRAKTIKUM PEMROGRAMAN WEB',
-                      finalscore: '99.00',
-                      grade: 'A',
-                      individu: 100,
-                      bimbingan: 100,
-                      laporan: 100,
-                      kehadiran: 100,
-                      prilaku: 100,
-                      kelompok: 95,
-                    ),
-                    ListNilai(
-                      code: '155KB137',
-                      sks: '1 ',
-                      title: 'PRAKTIKUM HARDWARE DASAR',
-                      finalscore: '99.00',
-                      grade: 'A',
-                      individu: 100,
-                      bimbingan: 100,
-                      laporan: 100,
-                      kehadiran: 100,
-                      prilaku: 100,
-                      kelompok: 95,
-                    ),
-                    ListNilai(
-                      code: '155KB138',
-                      sks: '1 ',
-                      title: 'PRAKTIKUM JARINGAN KOMPUTER',
-                      finalscore: '99.00',
-                      grade: 'A',
-                      individu: 100,
-                      bimbingan: 100,
-                      laporan: 100,
-                      kehadiran: 100,
-                      prilaku: 100,
-                      kelompok: 95,
-                    ),
-                    ListNilai(
-                      code: '155KB139',
-                      sks: '1 ',
-                      title: 'PRAKTIKUM MOBILE APP DEVELOPMENT',
-                      finalscore: '99.00',
-                      grade: 'A',
-                      individu: 100,
-                      bimbingan: 100,
-                      laporan: 100,
-                      kehadiran: 100,
-                      prilaku: 100,
-                      kelompok: 95,
-                    ),
-                    ListNilai(
-                      code: '155KB140',
-                      sks: '1 ',
-                      title: 'RANGKAIAN DIGITAL',
-                      finalscore: '99.00',
-                      grade: 'A',
-                      individu: 100,
-                      bimbingan: 100,
-                      laporan: 100,
-                      kehadiran: 100,
-                      prilaku: 100,
-                      kelompok: 95,
-                    ),
-                    ListNilai(
-                      code: '155KB141',
-                      sks: '1 ',
-                      title: 'PENGANTAR AKUTANSI',
-                      finalscore: '99.00',
-                      grade: 'A',
-                      individu: 100,
-                      bimbingan: 100,
-                      laporan: 100,
-                      kehadiran: 100,
-                      prilaku: 100,
-                      kelompok: 95,
-                    )
-                  ],
-                ),
+                  } else {
+                    return Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            margin: const EdgeInsets.only(top: 12),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/img_no_data.png'),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text.rich(
+                            TextSpan(
+                              text: 'Oops! Sepertinya kamu tidak\nmemiliki ',
+                              style: blackTextStyle.copyWith(fontSize: 12),
+                              children: [
+                                TextSpan(
+                                  text: 'Data Mahasiswa',
+                                  style: blueTextStyle.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' hari ini',
+                                  style: blackTextStyle.copyWith(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
               ),
             ),
-          )
-        ],
+            BlocProvider(
+              create: (context) => NilaiApproveBloc()..add(NilaiApproveGet()),
+              child: BlocBuilder<NilaiApproveBloc, NilaiApproveState>(
+                builder: (context, state) {
+                  if (state is NilaiApproveLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is NilaiApproveSuccess) {
+                    final filteredData = state.nilai.where((krs) {
+                      final krsName = krs.nama ?? '';
+                      return krsName
+                          .toLowerCase()
+                          .contains(_searchText.toLowerCase());
+                    }).toList();
+
+                    return Column(
+                      children: [
+                        // Search Bar
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Search by name',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                _searchText = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView(
+                            children: filteredData.map((nilaiApproveMethod) {
+                              // return ListApproveKrs(
+                              //     krsApproveMethod: krsApproveMethod);
+                              return ListApproveNilai(
+                                  nilaiApproveMethod: nilaiApproveMethod);
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            margin: const EdgeInsets.only(top: 12),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/img_no_data.png'),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text.rich(
+                            TextSpan(
+                              text: 'Oops! Sepertinya kamu tidak\nmemiliki ',
+                              style: blackTextStyle.copyWith(fontSize: 12),
+                              children: [
+                                TextSpan(
+                                  text: 'Data Mahasiswa',
+                                  style: blueTextStyle.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' hari ini',
+                                  style: blackTextStyle.copyWith(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
