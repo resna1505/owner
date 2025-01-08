@@ -65,7 +65,7 @@ class ListApproveNilai extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    nilaiApproveMethod.tanggalapproval ?? '',
+                    nilaiApproveMethod.tanggal ?? '',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
                     ),
@@ -75,13 +75,46 @@ class ListApproveNilai extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Jurusan : ',
+                    'Prodi : ',
                     style: greyTextStyle.copyWith(
                       fontSize: 12,
                     ),
                   ),
                   Text(
                     nilaiApproveMethod.namaProdi ?? '',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Simbol Awal : ${nilaiApproveMethod.simbolAwal ?? 0}',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    'Simbol Akhir : ${nilaiApproveMethod.simbolAkhir ?? 0}',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Approval : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    nilaiApproveMethod.tanggalapproval ?? '',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
                     ),

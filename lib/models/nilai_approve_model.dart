@@ -6,6 +6,8 @@ class NilaiApproveModel {
   final String? tanggal;
   final String? tanggalapproval;
   final String? statusApproval;
+  final String? simbolAwal;
+  final String? simbolAkhir;
 
   NilaiApproveModel({
     this.namaProdi,
@@ -15,6 +17,8 @@ class NilaiApproveModel {
     this.tanggal,
     this.statusApproval,
     this.tanggalapproval,
+    this.simbolAwal,
+    this.simbolAkhir,
   });
 
   factory NilaiApproveModel.fromJson(Map<String, dynamic> json) =>
@@ -26,5 +30,7 @@ class NilaiApproveModel {
         tanggal: json['TANGGAL'],
         tanggalapproval: json['TGLAPPROVAL'],
         statusApproval: json['STATUSAPPROVAL'],
+        simbolAwal: json['SIMBOLAWAL'],
+        simbolAkhir: json['SIMBOLAKHIR'],
       );
 }

@@ -72,13 +72,29 @@ class ListNonApproveBeasiswa extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'Jurusan : ',
+                      'Prodi : ',
                       style: greyTextStyle.copyWith(
                         fontSize: 12,
                       ),
                     ),
                     Text(
                       beasiswaNonMethod.namaProdi ?? '',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Angkatan : ',
+                      style: greyTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      beasiswaNonMethod.angkatan ?? '',
                       style: blackTextStyle.copyWith(
                         fontSize: 12,
                       ),

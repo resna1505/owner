@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kampus/shared/theme.dart';
-import 'package:kampus/ui/widgets/buttons.dart';
+import 'package:kampus/ui/widgets/build_campus_news.dart';
+// import 'package:kampus/ui/widgets/buttons.dart';
 import 'package:kampus/ui/widgets/home_academy_item.dart';
-import 'package:kampus/ui/widgets/home_campus_news.dart';
+// import 'package:kampus/ui/widgets/home_campus_news.dart';
 import 'package:d_chart/commons/data_model.dart';
 import 'package:d_chart/commons/axis.dart';
 import 'package:d_chart/commons/viewport.dart';
@@ -121,7 +122,8 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
             // buildSchedule(),
             // buildToDo(context),
             buildAcademy(context),
-            buildCampusNews(context),
+            // buildCampusNews(context),
+            const BuildCampusNews(),
           ],
           if (_currentIndex == 1) ...[
             buildExplore(context),
@@ -1541,96 +1543,96 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
     );
   }
 
-  Widget buildCampusNews(context) {
-    return Container(
-      padding: const EdgeInsets.only(bottom: 24),
-      decoration: BoxDecoration(
-        color: whiteColor,
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 24,
-              right: 24,
-              top: 12,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Campus News',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 16,
-                    fontWeight: semiBold,
-                  ),
-                ),
-                CustomButtonOutline(
-                  title: 'All News',
-                  onTap: () {
-                    Navigator.pushNamed(context, '/campus-news');
-                  },
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: 18,
-                ),
-                HomeCampusNews(
-                  imgUrl: 'assets/ic_news1.png',
-                  title:
-                      'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
-                  subtitle:
-                      'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
-                  onTap: () {
-                    Navigator.pushNamed(context, '/campus-news-detail');
-                  },
-                ),
-                HomeCampusNews(
-                  imgUrl: 'assets/ic_news2.png',
-                  title:
-                      'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
-                  subtitle:
-                      'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
-                  onTap: () {},
-                ),
-                HomeCampusNews(
-                  imgUrl: 'assets/ic_news1.png',
-                  title:
-                      'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
-                  subtitle:
-                      'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
-                  onTap: () {},
-                ),
-                HomeCampusNews(
-                  imgUrl: 'assets/ic_news2.png',
-                  title:
-                      'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
-                  subtitle:
-                      'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
-                  onTap: () {},
-                ),
-                HomeCampusNews(
-                  imgUrl: 'assets/ic_news1.png',
-                  title:
-                      'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
-                  subtitle:
-                      'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
-                  onTap: () {},
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
+  // Widget buildCampusNewsOld(context) {
+  //   return Container(
+  //     padding: const EdgeInsets.only(bottom: 24),
+  //     decoration: BoxDecoration(
+  //       color: whiteColor,
+  //     ),
+  //     child: Column(
+  //       children: [
+  //         Padding(
+  //           padding: const EdgeInsets.only(
+  //             left: 24,
+  //             right: 24,
+  //             top: 12,
+  //           ),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               Text(
+  //                 'Campus News',
+  //                 style: blackTextStyle.copyWith(
+  //                   fontSize: 16,
+  //                   fontWeight: semiBold,
+  //                 ),
+  //               ),
+  //               CustomButtonOutline(
+  //                 title: 'All News',
+  //                 onTap: () {
+  //                   Navigator.pushNamed(context, '/campus-news');
+  //                 },
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         const SizedBox(
+  //           height: 12,
+  //         ),
+  //         SingleChildScrollView(
+  //           scrollDirection: Axis.horizontal,
+  //           child: Row(
+  //             children: [
+  //               const SizedBox(
+  //                 width: 18,
+  //               ),
+  //               HomeCampusNews(
+  //                 imgUrl: 'assets/ic_news1.png',
+  //                 title:
+  //                     'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
+  //                 subtitle:
+  //                     'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
+  //                 onTap: () {
+  //                   Navigator.pushNamed(context, '/campus-news-detail');
+  //                 },
+  //               ),
+  //               HomeCampusNews(
+  //                 imgUrl: 'assets/ic_news2.png',
+  //                 title:
+  //                     'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
+  //                 subtitle:
+  //                     'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
+  //                 onTap: () {},
+  //               ),
+  //               HomeCampusNews(
+  //                 imgUrl: 'assets/ic_news1.png',
+  //                 title:
+  //                     'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
+  //                 subtitle:
+  //                     'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
+  //                 onTap: () {},
+  //               ),
+  //               HomeCampusNews(
+  //                 imgUrl: 'assets/ic_news2.png',
+  //                 title:
+  //                     'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
+  //                 subtitle:
+  //                     'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
+  //                 onTap: () {},
+  //               ),
+  //               HomeCampusNews(
+  //                 imgUrl: 'assets/ic_news1.png',
+  //                 title:
+  //                     'Samsung kembangkan jaringan 6G yang sangat canggih dan inovatif',
+  //                 subtitle:
+  //                     'Jakarta (ANTARA) - Samsung Electronics Co mengatakan bahwa organisasi penelitian dan pengembangan Samsung Research America (SRA) telah mengembangkan teknologi jaringan generasi terbaru, 6G, yang menjanjikan ...',
+  //                 onTap: () {},
+  //               ),
+  //             ],
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 }

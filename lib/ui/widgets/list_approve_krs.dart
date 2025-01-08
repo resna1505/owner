@@ -65,7 +65,7 @@ class ListApproveKrs extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    krsApproveMethod.tanggalapproval ?? '',
+                    krsApproveMethod.tanggal ?? '',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
                     ),
@@ -75,13 +75,45 @@ class ListApproveKrs extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Jurusan : ',
+                    'Prodi : ',
                     style: greyTextStyle.copyWith(
                       fontSize: 12,
                     ),
                   ),
                   Text(
                     krsApproveMethod.namaProdi ?? '',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Angkatan : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    krsApproveMethod.angkatan ?? '',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Approval : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    krsApproveMethod.tanggalapproval ?? '',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
                     ),

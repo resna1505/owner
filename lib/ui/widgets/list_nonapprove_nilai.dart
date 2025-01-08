@@ -55,7 +55,23 @@ class ListNonApproveNilai extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'Jurusan : ',
+                      'Tanggal : ',
+                      style: greyTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      '${nilaiNonMethod.tanggal ?? 0}',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Prodi : ',
                       style: greyTextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -69,16 +85,17 @@ class ListNonApproveNilai extends StatelessWidget {
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Tanggal : ',
+                      'Simbol Awal : ${nilaiNonMethod.simbolAwal ?? 0}',
                       style: greyTextStyle.copyWith(
                         fontSize: 12,
                       ),
                     ),
                     Text(
-                      '${nilaiNonMethod.tanggal ?? 0}',
-                      style: blackTextStyle.copyWith(
+                      'Simbol Akhir : ${nilaiNonMethod.simbolAkhir ?? 0}',
+                      style: greyTextStyle.copyWith(
                         fontSize: 12,
                       ),
                     ),

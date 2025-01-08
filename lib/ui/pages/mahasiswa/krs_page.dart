@@ -251,8 +251,6 @@ class _KRSPageState extends State<KRSPage> {
                         Expanded(
                           child: ListView(
                             children: filteredData.map((krsApproveMethod) {
-                              // return ListApproveBeasiswa(
-                              //     beasiswaApproveMethod: discountApprove);
                               return ListApproveKrs(
                                   krsApproveMethod: krsApproveMethod);
                             }).toList(),

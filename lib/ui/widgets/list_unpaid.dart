@@ -72,13 +72,45 @@ class ListUnpaid extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'Jurusan : ',
+                      'Prodi : ',
                       style: greyTextStyle.copyWith(
                         fontSize: 12,
                       ),
                     ),
                     Text(
                       discountMethod.namaProdi ?? '',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Angkatan : ',
+                      style: greyTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      discountMethod.angkatan ?? '',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Periode : ',
+                      style: greyTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      discountMethod.periode ?? '',
                       style: blackTextStyle.copyWith(
                         fontSize: 12,
                       ),

@@ -239,8 +239,6 @@ class _AssessmentPageState extends State<AssessmentPage> {
                         Expanded(
                           child: ListView(
                             children: filteredData.map((nilaiApproveMethod) {
-                              // return ListApproveKrs(
-                              //     krsApproveMethod: krsApproveMethod);
                               return ListApproveNilai(
                                   nilaiApproveMethod: nilaiApproveMethod);
                             }).toList(),

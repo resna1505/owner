@@ -76,13 +76,45 @@ class ListPaid extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Jurusan : ',
+                    'Prodi : ',
                     style: greyTextStyle.copyWith(
                       fontSize: 12,
                     ),
                   ),
                   Text(
                     discountApproveMethod.namaProdi ?? '',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Angkatan : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    discountApproveMethod.angkatan ?? '',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Periode : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    discountApproveMethod.periode ?? '',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
                     ),

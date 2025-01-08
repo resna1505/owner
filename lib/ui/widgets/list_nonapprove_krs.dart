@@ -55,7 +55,23 @@ class ListNonApproveKrs extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'Jurusan : ',
+                      'Tanggal : ',
+                      style: greyTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      '${krsNonMethod.tanggal ?? 0}',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Prodi : ',
                       style: greyTextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -71,13 +87,13 @@ class ListNonApproveKrs extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'Tanggal : ',
+                      'Angkatan : ',
                       style: greyTextStyle.copyWith(
                         fontSize: 12,
                       ),
                     ),
                     Text(
-                      '${krsNonMethod.tanggal ?? 0}',
+                      krsNonMethod.angkatan ?? '',
                       style: blackTextStyle.copyWith(
                         fontSize: 12,
                       ),
