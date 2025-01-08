@@ -8,9 +8,9 @@ import 'package:d_chart/commons/data_model.dart';
 import 'package:d_chart/commons/axis.dart';
 import 'package:d_chart/commons/viewport.dart';
 import 'package:d_chart/ordinal/bar.dart';
-import 'package:kampus/ui/widgets/home_to_do.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
+// import 'package:kampus/ui/widgets/home_to_do.dart';
+// import 'package:permission_handler/permission_handler.dart';
+// import 'package:qrscan/qrscan.dart' as scanner;
 
 List<OrdinalData> ordinalList = [
   OrdinalData(domain: '1', measure: 3.25),
@@ -129,7 +129,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
             buildExplore(context),
           ],
           if (_currentIndex == 2) ...[
-            buildQrCode(context),
+            // buildQrCode(context),
           ],
           if (_currentIndex == 3) ...[
             buildChats(context),
@@ -202,101 +202,101 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
     );
   }
 
-  Widget buildQrCode(context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ElevatedButton(
-          onPressed: () async {
-            //scan qr and return value
+  // Widget buildQrCode(context) {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: <Widget>[
+  //       ElevatedButton(
+  //         onPressed: () async {
+  //           //scan qr and return value
 
-            //ask camera permission
-            var status = await Permission.camera.status;
-            if (status.isDenied) {
-              // We haven't asked for permission yet or the permission has been denied before, but not permanently.
-              status = await Permission.camera.request();
-            }
+  //           //ask camera permission
+  //           var status = await Permission.camera.status;
+  //           if (status.isDenied) {
+  //             // We haven't asked for permission yet or the permission has been denied before, but not permanently.
+  //             status = await Permission.camera.request();
+  //           }
 
-            if (status == PermissionStatus.granted) {
-              String? cameraScanResult = await scanner.scan();
-              if (cameraScanResult != null) {
-                setState(() {
-                  // qrResult = cameraScanResult;
-                });
-              }
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent, // Remove background color
-            elevation: 0, // Remove shadow
-          ),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 12,
-              ),
-              Container(
-                padding: const EdgeInsets.all(
-                  16,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: whiteColor,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    HomeToDo(
-                      title: 'Kalkulus 1',
-                      status: 'Incomplete',
-                      date: '22th, Mar 2024',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              Container(
-                padding: const EdgeInsets.all(
-                  16,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: whiteColor,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    HomeToDo(
-                      title: 'Kalkulus 2',
-                      status: 'Completed',
-                      date: '22th, Mar 2024',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        // Text(
-        //   'Result:- $qrResult',
-        // ),
-      ],
-    );
-  }
+  //           if (status == PermissionStatus.granted) {
+  //             String? cameraScanResult = await scanner.scan();
+  //             if (cameraScanResult != null) {
+  //               setState(() {
+  //                 // qrResult = cameraScanResult;
+  //               });
+  //             }
+  //           }
+  //         },
+  //         style: ElevatedButton.styleFrom(
+  //           backgroundColor: Colors.transparent, // Remove background color
+  //           elevation: 0, // Remove shadow
+  //         ),
+  //         child: Column(
+  //           children: [
+  //             const SizedBox(
+  //               height: 12,
+  //             ),
+  //             Container(
+  //               padding: const EdgeInsets.all(
+  //                 16,
+  //               ),
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.circular(16),
+  //                 color: whiteColor,
+  //                 boxShadow: const [
+  //                   BoxShadow(
+  //                     color: Colors.grey,
+  //                     blurRadius: 5.0,
+  //                   ),
+  //                 ],
+  //               ),
+  //               child: Column(
+  //                 children: [
+  //                   HomeToDo(
+  //                     title: 'Kalkulus 1',
+  //                     status: 'Incomplete',
+  //                     date: '22th, Mar 2024',
+  //                     onTap: () {},
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             const SizedBox(
+  //               height: 12,
+  //             ),
+  //             Container(
+  //               padding: const EdgeInsets.all(
+  //                 16,
+  //               ),
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.circular(16),
+  //                 color: whiteColor,
+  //                 boxShadow: const [
+  //                   BoxShadow(
+  //                     color: Colors.grey,
+  //                     blurRadius: 5.0,
+  //                   ),
+  //                 ],
+  //               ),
+  //               child: Column(
+  //                 children: [
+  //                   HomeToDo(
+  //                     title: 'Kalkulus 2',
+  //                     status: 'Completed',
+  //                     date: '22th, Mar 2024',
+  //                     onTap: () {},
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       // Text(
+  //       //   'Result:- $qrResult',
+  //       // ),
+  //     ],
+  //   );
+  // }
 
   Widget buildExplore(context) {
     return Container(

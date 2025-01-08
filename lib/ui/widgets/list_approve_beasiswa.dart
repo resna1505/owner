@@ -137,6 +137,22 @@ class ListApproveBeasiswa extends StatelessWidget {
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  Text(
+                    'Approval : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    '${beasiswaApproveMethod.tanggalapproval ?? 0}',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

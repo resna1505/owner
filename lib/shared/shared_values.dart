@@ -1,1 +1,1 @@
-String baseUrl = 'http://localhost:8080';
+String baseUrl = 'https://ams-api-dev.univbatam.ac.id/index.php';

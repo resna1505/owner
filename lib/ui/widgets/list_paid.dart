@@ -153,6 +153,22 @@ class ListPaid extends StatelessWidget {
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  Text(
+                    'Approval : ',
+                    style: greyTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    discountApproveMethod.tanggalapproval ?? '',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

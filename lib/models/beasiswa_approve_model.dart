@@ -8,6 +8,7 @@ class BeasiswaApproveModel {
   final double? persenBeasiswa;
   final double? rupiahBeasiswa;
   final String? statusApproval;
+  final String? tanggalapproval;
 
   BeasiswaApproveModel({
     this.namaProdi,
@@ -19,6 +20,7 @@ class BeasiswaApproveModel {
     this.persenBeasiswa,
     this.rupiahBeasiswa,
     this.statusApproval,
+    this.tanggalapproval,
   });
 
   factory BeasiswaApproveModel.fromJson(Map<String, dynamic> json) =>
@@ -32,5 +34,6 @@ class BeasiswaApproveModel {
         persenBeasiswa: double.parse(json['PERSENBEASISWA'].toString()),
         rupiahBeasiswa: double.parse(json['RUPIAHBEASISWA'].toString()),
         statusApproval: json['STATUSAPPROVAL'],
+        tanggalapproval: json['TGLAPPROVAL'],
       );
 }
