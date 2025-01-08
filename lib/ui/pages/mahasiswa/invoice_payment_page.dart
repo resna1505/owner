@@ -22,7 +22,7 @@ class InvoicePaymentPage extends StatefulWidget {
 class _InvoicePaymentPageState extends State<InvoicePaymentPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
-  List<String> _checkedItems = [];
+  final List<String> _checkedItems = [];
 
   Future<void> _sendData() async {
     if (_checkedItems.isEmpty) {
@@ -43,11 +43,14 @@ class _InvoicePaymentPageState extends State<InvoicePaymentPage> {
       );
 
       if (response.statusCode == 200) {
+        // ignore: use_build_context_synchronously
         showSnackbar(context, 'Success', "Data sent successfully!", 'success');
       } else {
+        // ignore: use_build_context_synchronously
         showSnackbar(context, 'Error', response.body, 'error');
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       showSnackbar(context, 'Error', e.toString(), 'error');
     }
   }

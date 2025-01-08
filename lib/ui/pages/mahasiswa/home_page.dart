@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kampus/blocs/keuangan_akademik/keuangan_akademik_bloc.dart';
+import 'package:kampus/shared/shared_methods.dart';
 import 'package:kampus/shared/theme.dart';
-import 'package:kampus/ui/widgets/build_campus_news.dart';
-// import 'package:kampus/ui/widgets/buttons.dart';
 import 'package:kampus/ui/widgets/home_academy_item.dart';
-// import 'package:kampus/ui/widgets/home_campus_news.dart';
 import 'package:d_chart/commons/data_model.dart';
-import 'package:d_chart/commons/axis.dart';
-import 'package:d_chart/commons/viewport.dart';
-import 'package:d_chart/ordinal/bar.dart';
+// import 'package:kampus/ui/widgets/build_campus_news.dart';
+// import 'package:kampus/ui/widgets/buttons.dart';
+// import 'package:kampus/ui/widgets/home_campus_news.dart';
+// import 'package:d_chart/commons/axis.dart';
+// import 'package:d_chart/commons/viewport.dart';
+// import 'package:d_chart/ordinal/bar.dart';
 // import 'package:kampus/ui/widgets/home_to_do.dart';
 // import 'package:permission_handler/permission_handler.dart';
 // import 'package:qrscan/qrscan.dart' as scanner;
 
 List<OrdinalData> ordinalList = [
-  OrdinalData(domain: '1', measure: 3.25),
-  OrdinalData(domain: '2', measure: 2.75),
-  OrdinalData(domain: '3', measure: 3.55),
-  OrdinalData(domain: '4', measure: 3.85),
-  OrdinalData(domain: '5', measure: 2.95),
-  OrdinalData(domain: '6', measure: 3.75),
-  OrdinalData(domain: '7', measure: 3.55),
-  OrdinalData(domain: '8', measure: 3.85),
+  OrdinalData(domain: 'Jan', measure: 3.25),
+  OrdinalData(domain: 'Feb', measure: 2.75),
+  OrdinalData(domain: 'Mar', measure: 3.55),
+  OrdinalData(domain: 'Apr', measure: 3.85),
+  OrdinalData(domain: 'Mei', measure: 2.95),
+  OrdinalData(domain: 'Jun', measure: 3.75),
+  OrdinalData(domain: 'Jul', measure: 3.55),
+  OrdinalData(domain: 'Agu', measure: 3.85),
 ];
 
 final ordinalGroup = [
@@ -72,14 +75,14 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
               ),
               label: 'Beranda',
             ),
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/ic_explore.png',
-                width: 25,
-                color: _currentIndex == 1 ? purpleColor : greyColor,
-              ),
-              label: 'Explore',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Image.asset(
+            //     'assets/ic_explore.png',
+            //     width: 25,
+            //     color: _currentIndex == 1 ? purpleColor : greyColor,
+            //   ),
+            //   label: 'Explore',
+            // ),
             // BottomNavigationBarItem(
             //   icon: Icon(
             //     Icons.qr_code_scanner,
@@ -119,24 +122,26 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
         children: [
           if (_currentIndex == 0) ...[
             buildProfile(context),
+            buildAcademy(context),
+            buildExplore(context)
             // buildSchedule(),
             // buildToDo(context),
-            buildAcademy(context),
             // buildCampusNews(context),
-            const BuildCampusNews(),
+            // const BuildCampusNews(),
           ],
           if (_currentIndex == 1) ...[
-            buildExplore(context),
-          ],
-          if (_currentIndex == 2) ...[
-            // buildQrCode(context),
-          ],
-          if (_currentIndex == 3) ...[
-            buildChats(context),
-          ],
-          if (_currentIndex == 4) ...[
             buildAccounts(context),
           ],
+          // if (_currentIndex == 2) ...[
+          //   // buildQrCode(context),
+          //   buildAccounts(context),
+          // ],
+          // if (_currentIndex == 3) ...[
+          //   buildChats(context),
+          // ],
+          // if (_currentIndex == 4) ...[
+          //   buildAccounts(context),
+          // ],
         ],
       ),
       // body: tabs[_currentIndex],
@@ -303,63 +308,221 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
       color: whiteColor,
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(22),
-            color: Colors.blue.shade50,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'RESNA TRI PANGESTU',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 16,
-                    fontWeight: semiBold,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Sekarang kamu ada di ',
-                      style: blackTextStyle.copyWith(
-                        fontSize: 13,
+          BlocProvider(
+            create: (context) =>
+                KeuanganAkademikBloc()..add(KeuanganAkademikGet()),
+            child: BlocBuilder<KeuanganAkademikBloc, KeuanganAkademikState>(
+              builder: (context, state) {
+                if (state is KeuanganAkademikLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is KeuanganAkademikSuccess) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 22, vertical: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: greySoftColor,
+                        width: 1,
                       ),
                     ),
-                    Text(
-                      'semester 6',
-                      style: blackTextStyle.copyWith(
-                        fontSize: 13,
-                        fontWeight: semiBold,
-                      ),
-                    )
-                  ],
-                ),
-                Text(
-                  'Kamu bisa lihat progress perkuliahanmu di bawah ini.',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 13,
-                  ),
-                ),
-              ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Keuangan Akademik',
+                          style: blackTextStyle.copyWith(
+                            fontSize: 15,
+                            fontWeight: semiBold,
+                          ),
+                        ),
+                        Text(
+                          'Tahun ${state.keuangan.tahun.toString()} ',
+                          style: blueTextStyle.copyWith(
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(
+                            16,
+                          ),
+                          margin: const EdgeInsets.only(bottom: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: whiteColor,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 5.0,
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Total Pendapatan',
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 15,
+                                          fontWeight: semiBold,
+                                        ),
+                                      ),
+                                      Text(
+                                        formatCurrency(
+                                            num.parse(state.keuangan.total!)),
+                                        style: blueTextStyle.copyWith(
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // Text(
+                                  //   '145',
+                                  //   style: blackTextStyle.copyWith(
+                                  //     fontSize: 30,
+                                  //     fontWeight: semiBold,
+                                  //   ),
+                                  // )
+                                ],
+                              ),
+                              // Container(
+                              //   margin: const EdgeInsets.symmetric(
+                              //     vertical: 6,
+                              //   ),
+                              //   decoration: BoxDecoration(
+                              //     border: Border.all(
+                              //       color: greySoftColor,
+                              //       width: 1,
+                              //     ),
+                              //   ),
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Text(
+                              //       'SKS Lulus',
+                              //       style: blackTextStyle.copyWith(
+                              //         fontSize: 12,
+                              //       ),
+                              //     ),
+                              //     Text(
+                              //       '143',
+                              //       style: blackTextStyle.copyWith(
+                              //         fontSize: 12,
+                              //       ),
+                              //     )
+                              //   ],
+                              // ),
+                              // const SizedBox(
+                              //   height: 4,
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Text(
+                              //       'SKS Mengulang',
+                              //       style: blackTextStyle.copyWith(
+                              //         fontSize: 12,
+                              //       ),
+                              //     ),
+                              //     Text(
+                              //       '2',
+                              //       style: blackTextStyle.copyWith(
+                              //         fontSize: 12,
+                              //       ),
+                              //     )
+                              //   ],
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              },
             ),
           ),
+          // Container(
+          //   padding: const EdgeInsets.symmetric(
+          //     horizontal: 22,
+          //     // vertical: 16,
+          //   ),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Text(
+          //         'Keuangan Akademik',
+          //         style: blackTextStyle.copyWith(
+          //           fontSize: 15,
+          //           fontWeight: semiBold,
+          //         ),
+          //       ),
+          //       Text(
+          //         '2024/2025 Genap',
+          //         style: blueTextStyle.copyWith(
+          //           fontSize: 13,
+          //         ),
+          //       ),
+          //       const SizedBox(
+          //         height: 8,
+          //       ),
+          //       AspectRatio(
+          //         aspectRatio: 16 / 9,
+          //         child: DChartBarO(
+          //           groupList: ordinalGroup,
+          //           domainAxis: DomainAxis(
+          //             ordinalViewport: OrdinalViewport('1', 4),
+          //           ),
+          //           measureAxis: const MeasureAxis(
+          //             numericViewport: NumericViewport(0, 4),
+          //           ),
+          //           allowSliding: true,
+          //           barLabelValue: (group, ordinalData, index) {
+          //             return ordinalData.measure.toString();
+          //           },
+          //           animate: true,
+          //           animationDuration: const Duration(milliseconds: 300),
+          //           fillColor: (group, ordinalData, index) {
+          //             if (ordinalData.measure > 0) return blueSoftColor;
+          //             return blueSoftColor;
+          //           },
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Container(
             padding: const EdgeInsets.only(top: 16, bottom: 16, left: 22),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Indeks Prestasi',
+                  'Total Mahasiswa',
                   style: blackTextStyle.copyWith(
                     fontSize: 15,
                     fontWeight: semiBold,
                   ),
                 ),
-                Text(
-                  'IP yang di peroleh di semester 5',
-                  style: blueTextStyle.copyWith(
-                    fontSize: 13,
-                  ),
-                ),
+                // Text(
+                //   'Tahun Akademik 2024/2025',
+                //   style: blueTextStyle.copyWith(
+                //     fontSize: 13,
+                //   ),
+                // ),
                 const SizedBox(
                   height: 8,
                 ),
@@ -390,36 +553,36 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'IPS',
+                                'Mahasiswa Aktif',
                                 style: blackTextStyle.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                 ),
                               ),
                               Text(
-                                '3.25',
+                                '250',
                                 style: blackTextStyle.copyWith(
                                   fontSize: 32,
                                   fontWeight: semiBold,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.arrow_circle_down_outlined,
-                                    color: redColor,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    '-0.57',
-                                    style: redTextStyle.copyWith(
-                                      fontSize: 12,
-                                    ),
-                                  )
-                                ],
-                              )
+                              // Row(
+                              //   children: [
+                              //     Icon(
+                              //       Icons.arrow_circle_down_outlined,
+                              //       color: redColor,
+                              //       size: 18,
+                              //     ),
+                              //     const SizedBox(
+                              //       width: 4,
+                              //     ),
+                              //     Text(
+                              //       '-0.57',
+                              //       style: redTextStyle.copyWith(
+                              //         fontSize: 12,
+                              //       ),
+                              //     )
+                              //   ],
+                              // )
                             ],
                           ),
                         ),
@@ -447,36 +610,36 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'IPK',
+                                'Mahasiswa Laki-laki',
                                 style: blackTextStyle.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                 ),
                               ),
                               Text(
-                                '3.56',
+                                '150',
                                 style: blackTextStyle.copyWith(
                                   fontSize: 32,
                                   fontWeight: semiBold,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.arrow_circle_up_outlined,
-                                    color: greenColor,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    '-0.57',
-                                    style: greenTextStyle.copyWith(
-                                      fontSize: 12,
-                                    ),
-                                  )
-                                ],
-                              )
+                              // Row(
+                              //   children: [
+                              //     Icon(
+                              //       Icons.arrow_circle_up_outlined,
+                              //       color: greenColor,
+                              //       size: 18,
+                              //     ),
+                              //     const SizedBox(
+                              //       width: 4,
+                              //     ),
+                              //     Text(
+                              //       '-0.57',
+                              //       style: greenTextStyle.copyWith(
+                              //         fontSize: 12,
+                              //       ),
+                              //     )
+                              //   ],
+                              // )
                             ],
                           ),
                         ),
@@ -504,36 +667,36 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'IPK Lulus',
+                                'Mahasiswa Perempuan',
                                 style: blackTextStyle.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                 ),
                               ),
                               Text(
-                                '3.58',
+                                '100',
                                 style: blackTextStyle.copyWith(
                                   fontSize: 32,
                                   fontWeight: semiBold,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.arrow_circle_down_outlined,
-                                    color: redColor,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    '-0.21',
-                                    style: redTextStyle.copyWith(
-                                      fontSize: 12,
-                                    ),
-                                  )
-                                ],
-                              )
+                              // Row(
+                              //   children: [
+                              //     Icon(
+                              //       Icons.arrow_circle_down_outlined,
+                              //       color: redColor,
+                              //       size: 18,
+                              //     ),
+                              //     const SizedBox(
+                              //       width: 4,
+                              //     ),
+                              //     Text(
+                              //       '-0.21',
+                              //       style: redTextStyle.copyWith(
+                              //         fontSize: 12,
+                              //       ),
+                              //     )
+                              //   ],
+                              // )
                             ],
                           ),
                         ),
@@ -544,182 +707,6 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                     ),
                   ),
                 )
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: greySoftColor,
-                width: 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'SKS',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 15,
-                  ),
-                ),
-                Text(
-                  'SKS-mu sampai semester lalu',
-                  style: blueTextStyle.copyWith(
-                    fontSize: 13,
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(
-                    16,
-                  ),
-                  margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: whiteColor,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        blurRadius: 5.0,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Total SKS telah ditempuh',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: 15,
-                                  fontWeight: semiBold,
-                                ),
-                              ),
-                              Text(
-                                'SKS Lulus Minimal 140 SKS',
-                                style: blueTextStyle.copyWith(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            '145',
-                            style: blackTextStyle.copyWith(
-                              fontSize: 30,
-                              fontWeight: semiBold,
-                            ),
-                          )
-                        ],
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: greySoftColor,
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'SKS Lulus',
-                            style: blackTextStyle.copyWith(
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            '143',
-                            style: blackTextStyle.copyWith(
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'SKS Mengulang',
-                            style: blackTextStyle.copyWith(
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            '2',
-                            style: blackTextStyle.copyWith(
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 22,
-              vertical: 16,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Perbandingan Nilai',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 15,
-                    fontWeight: semiBold,
-                  ),
-                ),
-                Text(
-                  'Nilai yang kamu peroleh sampai sekarang',
-                  style: blueTextStyle.copyWith(
-                    fontSize: 13,
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: DChartBarO(
-                    groupList: ordinalGroup,
-                    domainAxis: DomainAxis(
-                      ordinalViewport: OrdinalViewport('1', 4),
-                    ),
-                    measureAxis: const MeasureAxis(
-                      numericViewport: NumericViewport(0, 4),
-                    ),
-                    allowSliding: true,
-                    barLabelValue: (group, ordinalData, index) {
-                      return ordinalData.measure.toString();
-                    },
-                    animate: true,
-                    animationDuration: const Duration(milliseconds: 300),
-                    fillColor: (group, ordinalData, index) {
-                      if (ordinalData.measure > 0) return blueSoftColor;
-                      return blueSoftColor;
-                    },
-                  ),
-                ),
               ],
             ),
           ),
