@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http; // Tambahkan paket http
-import 'package:kampus/blocs/beasiswa_approve/beasiswa_approve_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'package:kampus/blocs/krs_approve/krs_approve_bloc.dart';
 import 'package:kampus/blocs/krs_non_approve/krs_non_approve_bloc.dart';
 import 'package:kampus/shared/shared_methods.dart';
 import 'package:kampus/shared/theme.dart';
 import 'package:kampus/ui/widgets/buttons.dart';
-import 'package:kampus/ui/widgets/list_approve_beasiswa.dart';
+import 'package:kampus/ui/widgets/list_approve_krs.dart';
 import 'package:kampus/ui/widgets/list_nonapprove_krs.dart';
 
 class KRSPage extends StatefulWidget {
@@ -31,6 +31,7 @@ class _KRSPageState extends State<KRSPage> {
     }
 
     final payload = {
+      "iduser": "elly",
       "checklistData": _checkedItems.map((id) => {"approvalkey": id}).toList(),
     };
 
@@ -213,17 +214,15 @@ class _KRSPageState extends State<KRSPage> {
               ),
             ),
             BlocProvider(
-              create: (context) =>
-                  BeasiswaApproveBloc()..add(BeasiswaApproveGet()),
-              child: BlocBuilder<BeasiswaApproveBloc, BeasiswaApproveState>(
+              create: (context) => KrsApproveBloc()..add(KrsApproveGet()),
+              child: BlocBuilder<KrsApproveBloc, KrsApproveState>(
                 builder: (context, state) {
-                  if (state is BeasiswaApproveLoading) {
+                  if (state is KrsApproveLoading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is BeasiswaApproveSuccess) {
-                    final filteredData =
-                        state.beasiswaApprove.where((discount) {
-                      final discountName = discount.nama ?? '';
-                      return discountName
+                  } else if (state is KrsApproveSuccess) {
+                    final filteredData = state.krs.where((krs) {
+                      final krsName = krs.nama ?? '';
+                      return krsName
                           .toLowerCase()
                           .contains(_searchText.toLowerCase());
                     }).toList();
@@ -251,9 +250,11 @@ class _KRSPageState extends State<KRSPage> {
                         ),
                         Expanded(
                           child: ListView(
-                            children: filteredData.map((discountApprove) {
-                              return ListApproveBeasiswa(
-                                  beasiswaApproveMethod: discountApprove);
+                            children: filteredData.map((krsApproveMethod) {
+                              // return ListApproveBeasiswa(
+                              //     beasiswaApproveMethod: discountApprove);
+                              return ListApproveKrs(
+                                  krsApproveMethod: krsApproveMethod);
                             }).toList(),
                           ),
                         ),
