@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kampus/blocs/auth/auth_bloc.dart';
 import 'package:kampus/blocs/keuangan_akademik/keuangan_akademik_bloc.dart';
+import 'package:kampus/services/auth_service.dart';
 import 'package:kampus/shared/shared_methods.dart';
 import 'package:kampus/shared/theme.dart';
 import 'package:kampus/ui/widgets/home_academy_item.dart';
@@ -885,95 +886,63 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
   }
 
   Widget buildProfile(context) {
-    return Container(
-      padding: const EdgeInsets.only(
-        left: 20,
-        right: 10,
-        top: 10,
-        bottom: 16,
-      ),
-      color: lightBackgroundColor,
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Good Morning',
-                style: blackTextStyle.copyWith(
-                  fontSize: 12,
+    String getGreeting() {
+      final hour = DateTime.now().hour;
+
+      if (hour < 12) {
+        return 'Good Morning';
+      } else if (hour < 17) {
+        return 'Good Afternoon';
+      } else {
+        return 'Good Evening';
+      }
+    }
+
+    // Panggil fungsi getGreeting untuk mendapatkan ucapan
+    final greeting = getGreeting();
+
+    return FutureBuilder<String>(
+      future: AuthService().getIdMahasiswa(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          final idmhs = snapshot.data ?? 'Unknown';
+          return Container(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 10,
+              top: 10,
+              bottom: 16,
+            ),
+            color: lightBackgroundColor,
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      greeting, // Variabel greeting digunakan di sini
+                      style: blackTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      idmhs,
+                      style: blackTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: semiBold,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Text(
-                'IBU ELLY ',
-                style: blackTextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: semiBold,
-                ),
-              ),
-            ],
-          ),
-          // const Spacer(),
-          // Row(
-          //   children: [
-          //     // Container(
-          //     //   width: 24,
-          //     //   height: 24,
-          //     //   decoration: const BoxDecoration(
-          //     //     shape: BoxShape.rectangle,
-          //     //     image: DecorationImage(
-          //     //       image: AssetImage(
-          //     //         'assets/img_profile.png',
-          //     //       ),
-          //     //     ),
-          //     //   ),
-          //     // ),
-          //     // const SizedBox(
-          //     //   width: 16,
-          //     // ),
-          //     GestureDetector(
-          //       onTap: () {
-          //         Navigator.pushNamed(context, '/notification-mahasiswa');
-          //       },
-          //       child: Container(
-          //         width: 24,
-          //         height: 24,
-          //         decoration: BoxDecoration(
-          //           shape: BoxShape.rectangle,
-          //           color: purpleColor,
-          //           borderRadius: BorderRadius.circular(4.0),
-          //         ),
-          //         child: Icon(
-          //           Icons.notifications_none,
-          //           color: whiteColor,
-          //           size: 18,
-          //         ),
-          //       ),
-          //     ),
-          //     // const SizedBox(
-          //     //   width: 16,
-          //     // ),
-          //     // Container(
-          //     //   width: 24,
-          //     //   height: 24,
-          //     //   decoration: BoxDecoration(
-          //     //     shape: BoxShape.rectangle,
-          //     //     color: greenColor,
-          //     //     borderRadius: BorderRadius.circular(4.0),
-          //     //   ),
-          //     //   child: Icon(
-          //     //     Icons.qr_code_scanner,
-          //     //     color: whiteColor,
-          //     //     size: 18,
-          //     //   ),
-          //     // ),
-          //   ],
-          // ),
-          // const SizedBox(
-          //   width: 16,
-          // ),
-        ],
-      ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 

@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     // Note : Email Input
                     CustomFormField(
-                      title: 'Email',
+                      title: 'Username',
                       controller: emailController,
                     ),
                     const SizedBox(

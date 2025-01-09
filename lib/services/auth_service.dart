@@ -9,7 +9,8 @@ class AuthService {
   Future<UserModel> login(SignInFormModel data) async {
     try {
       final res = await http.post(
-        Uri.parse('https://ams-api.univbatam.ac.id/index.php/authenticate'),
+        Uri.parse(
+            'https://ams-api-dev.univbatam.ac.id/index.php/authenticate/owner'),
         body: data.toJson(),
       );
 
@@ -54,9 +55,9 @@ class AuthService {
     try {
       const storage = FlutterSecureStorage();
       await storage.write(key: 'token', value: user.token);
-      await storage.write(key: 'email', value: user.email);
+      await storage.write(key: 'email', value: user.id);
       await storage.write(key: 'password', value: user.password);
-      await storage.write(key: 'id', value: user.id);
+      await storage.write(key: 'id', value: user.name);
     } catch (e) {
       rethrow;
     }
