@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kampus/blocs/auth/auth_bloc.dart';
 import 'package:kampus/blocs/keuangan_akademik/keuangan_akademik_bloc.dart';
+import 'package:kampus/blocs/total_mahasiswa/total_mahasiswa_bloc.dart';
 import 'package:kampus/services/auth_service.dart';
 import 'package:kampus/shared/shared_methods.dart';
 import 'package:kampus/shared/theme.dart';
@@ -507,209 +508,286 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
           //     ],
           //   ),
           // ),
-          Container(
-            padding: const EdgeInsets.only(top: 16, bottom: 16, left: 22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Total Mahasiswa',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 15,
-                    fontWeight: semiBold,
-                  ),
-                ),
-                // Text(
-                //   'Tahun Akademik 2024/2025',
-                //   style: blueTextStyle.copyWith(
-                //     fontSize: 13,
-                //   ),
-                // ),
-                const SizedBox(
-                  height: 8,
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 4, top: 4),
-                    child: Row(
+          BlocProvider(
+            create: (context) => TotalMahasiswaBloc()..add(TotalMahasiswaGet()),
+            child: BlocBuilder<TotalMahasiswaBloc, TotalMahasiswaState>(
+              builder: (context, state) {
+                if (state is TotalMahasiswaLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is TotalMahasiswaSuccess) {
+                  return Container(
+                    padding:
+                        const EdgeInsets.only(top: 16, bottom: 16, left: 22),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(
-                            12,
-                          ),
-                          width: 115,
-                          margin: const EdgeInsets.only(bottom: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: whiteColor,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.grey,
-                                offset: Offset(0, 3),
-                                blurRadius: 5.0,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Mahasiswa Aktif',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: 14,
-                                ),
-                              ),
-                              Text(
-                                '250',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: 32,
-                                  fontWeight: semiBold,
-                                ),
-                              ),
-                              // Row(
-                              //   children: [
-                              //     Icon(
-                              //       Icons.arrow_circle_down_outlined,
-                              //       color: redColor,
-                              //       size: 18,
-                              //     ),
-                              //     const SizedBox(
-                              //       width: 4,
-                              //     ),
-                              //     Text(
-                              //       '-0.57',
-                              //       style: redTextStyle.copyWith(
-                              //         fontSize: 12,
-                              //       ),
-                              //     )
-                              //   ],
-                              // )
-                            ],
+                        Text(
+                          'Total Mahasiswa',
+                          style: blackTextStyle.copyWith(
+                            fontSize: 15,
+                            fontWeight: semiBold,
                           ),
                         ),
+                        // Text(
+                        //   'Tahun Akademik 2024/2025',
+                        //   style: blueTextStyle.copyWith(
+                        //     fontSize: 13,
+                        //   ),
+                        // ),
                         const SizedBox(
-                          width: 12,
+                          height: 8,
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(
-                            12,
-                          ),
-                          width: 115,
-                          margin: const EdgeInsets.only(bottom: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: whiteColor,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.grey,
-                                offset: Offset(0, 3),
-                                blurRadius: 5.0,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Mahasiswa Laki-laki',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: 14,
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 4, top: 4),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(
+                                    12,
+                                  ),
+                                  width: 115,
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: whiteColor,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0, 3),
+                                        blurRadius: 5.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Total Mahasiswa',
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        state.mahasiswa.total.toString(),
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 32,
+                                          fontWeight: semiBold,
+                                        ),
+                                      ),
+                                      // Row(
+                                      //   children: [
+                                      //     Icon(
+                                      //       Icons.arrow_circle_down_outlined,
+                                      //       color: redColor,
+                                      //       size: 18,
+                                      //     ),
+                                      //     const SizedBox(
+                                      //       width: 4,
+                                      //     ),
+                                      //     Text(
+                                      //       '-0.57',
+                                      //       style: redTextStyle.copyWith(
+                                      //         fontSize: 12,
+                                      //       ),
+                                      //     )
+                                      //   ],
+                                      // )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                '150',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: 32,
-                                  fontWeight: semiBold,
+                                const SizedBox(
+                                  width: 12,
                                 ),
-                              ),
-                              // Row(
-                              //   children: [
-                              //     Icon(
-                              //       Icons.arrow_circle_up_outlined,
-                              //       color: greenColor,
-                              //       size: 18,
-                              //     ),
-                              //     const SizedBox(
-                              //       width: 4,
-                              //     ),
-                              //     Text(
-                              //       '-0.57',
-                              //       style: greenTextStyle.copyWith(
-                              //         fontSize: 12,
-                              //       ),
-                              //     )
-                              //   ],
-                              // )
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(
-                            12,
-                          ),
-                          width: 115,
-                          margin: const EdgeInsets.only(bottom: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: whiteColor,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.grey,
-                                offset: Offset(0, 3),
-                                blurRadius: 5.0,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Mahasiswa Perempuan',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: 14,
+                                Container(
+                                  padding: const EdgeInsets.all(
+                                    12,
+                                  ),
+                                  width: 115,
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: whiteColor,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0, 3),
+                                        blurRadius: 5.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Mahasiswa Aktif',
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        state.mahasiswa.aktif.toString(),
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 32,
+                                          fontWeight: semiBold,
+                                        ),
+                                      ),
+                                      // Row(
+                                      //   children: [
+                                      //     Icon(
+                                      //       Icons.arrow_circle_down_outlined,
+                                      //       color: redColor,
+                                      //       size: 18,
+                                      //     ),
+                                      //     const SizedBox(
+                                      //       width: 4,
+                                      //     ),
+                                      //     Text(
+                                      //       '-0.57',
+                                      //       style: redTextStyle.copyWith(
+                                      //         fontSize: 12,
+                                      //       ),
+                                      //     )
+                                      //   ],
+                                      // )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                '100',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: 32,
-                                  fontWeight: semiBold,
+                                const SizedBox(
+                                  width: 12,
                                 ),
-                              ),
-                              // Row(
-                              //   children: [
-                              //     Icon(
-                              //       Icons.arrow_circle_down_outlined,
-                              //       color: redColor,
-                              //       size: 18,
-                              //     ),
-                              //     const SizedBox(
-                              //       width: 4,
-                              //     ),
-                              //     Text(
-                              //       '-0.21',
-                              //       style: redTextStyle.copyWith(
-                              //         fontSize: 12,
-                              //       ),
-                              //     )
-                              //   ],
-                              // )
-                            ],
+                                Container(
+                                  padding: const EdgeInsets.all(
+                                    12,
+                                  ),
+                                  width: 115,
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: whiteColor,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0, 3),
+                                        blurRadius: 5.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Mahasiswa Laki-laki',
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        state.mahasiswa.pria.toString(),
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 32,
+                                          fontWeight: semiBold,
+                                        ),
+                                      ),
+                                      // Row(
+                                      //   children: [
+                                      //     Icon(
+                                      //       Icons.arrow_circle_up_outlined,
+                                      //       color: greenColor,
+                                      //       size: 18,
+                                      //     ),
+                                      //     const SizedBox(
+                                      //       width: 4,
+                                      //     ),
+                                      //     Text(
+                                      //       '-0.57',
+                                      //       style: greenTextStyle.copyWith(
+                                      //         fontSize: 12,
+                                      //       ),
+                                      //     )
+                                      //   ],
+                                      // )
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 12,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(
+                                    12,
+                                  ),
+                                  width: 115,
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: whiteColor,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0, 3),
+                                        blurRadius: 5.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Mahasiswa Perempuan',
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        state.mahasiswa.perempuan.toString(),
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 32,
+                                          fontWeight: semiBold,
+                                        ),
+                                      ),
+                                      // Row(
+                                      //   children: [
+                                      //     Icon(
+                                      //       Icons.arrow_circle_down_outlined,
+                                      //       color: redColor,
+                                      //       size: 18,
+                                      //     ),
+                                      //     const SizedBox(
+                                      //       width: 4,
+                                      //     ),
+                                      //     Text(
+                                      //       '-0.21',
+                                      //       style: redTextStyle.copyWith(
+                                      //         fontSize: 12,
+                                      //       ),
+                                      //     )
+                                      //   ],
+                                      // )
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 12,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 12,
-                        ),
+                        )
                       ],
                     ),
-                  ),
-                )
-              ],
+                  );
+                } else {
+                  return Container();
+                }
+              },
             ),
           ),
         ],
