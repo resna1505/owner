@@ -35,7 +35,8 @@ class _LoginPageState extends State<LoginPage> {
           // TODO: implement listener
           if (state is AuthFailed) {
             // showCustomSnackbar(context, state.e);
-            showSnackbar(context, 'Error', state.e, 'error');
+            // showSnackbar(context, 'Error',
+            //     'Maaf Sesi sudah habis silahkan Login Ulang', 'error');
           }
 
           if (state is AuthSuccess) {

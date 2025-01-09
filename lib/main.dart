@@ -18,6 +18,7 @@ import 'package:kampus/ui/pages/mahasiswa/manage_account_page.dart';
 import 'package:kampus/ui/pages/mahasiswa/manage_profile_page.dart';
 import 'package:kampus/ui/pages/mahasiswa/my_schedule_page.dart';
 import 'package:kampus/ui/pages/mahasiswa/notification_page.dart';
+import 'package:kampus/ui/pages/mahasiswa/privacy_policy_page.dart';
 import 'package:kampus/ui/pages/mahasiswa/thesis_page.dart';
 import 'package:kampus/ui/pages/mahasiswa/todo_page.dart';
 import 'package:kampus/ui/pages/mahasiswa/transcript_page.dart';
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
           '/campus-news-detail': (context) => const CampusNewsDetail(),
           '/campus-news': (context) => const CampusNews(),
           '/todo': (context) => const ToDoPage(),
+          '/privacy-policy': (context) => const PrivacyPolicy(),
         },
       ),
     );
