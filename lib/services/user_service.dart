@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:kampus/services/auth_service.dart';
+import 'package:kampus/shared/shared_values.dart';
 
 class UserService {
   Future<void> updatePassword(String oldPassword, String newPassword) async {
@@ -10,7 +11,7 @@ class UserService {
       final idmhs = await AuthService().getIdMahasiswa();
       final res = await http.post(
         Uri.parse(
-          'https://ams-api.univbatam.ac.id/index.php/mahasiswa/ubah_password',
+          '$baseUrl/index.php/mahasiswa/ubah_password',
         ),
         body: {
           'id': idmhs,

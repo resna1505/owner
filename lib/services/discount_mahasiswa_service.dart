@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:kampus/models/discount_model.dart';
+import 'package:kampus/shared/shared_values.dart';
 
 class DiscountMahasiswaService {
   Future<List<DiscountModel>> getDiscountMahasiswa() async {
@@ -9,7 +10,7 @@ class DiscountMahasiswaService {
       // final idmhs = await AuthService().getIdMahasiswa();
       final res = await http.get(
         Uri.parse(
-          'https://ams-api-dev.univbatam.ac.id/index.php/owner/datanonapprovediskon',
+          '$baseUrl/owner/datanonapprovediskon',
         ),
       );
 

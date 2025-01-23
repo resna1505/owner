@@ -568,14 +568,14 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                     children: [
                                       Text(
                                         'Total Mahasiswa',
-                                        style: blackTextStyle.copyWith(
+                                        style: blueTextStyle.copyWith(
                                           fontSize: 14,
                                         ),
                                       ),
                                       Text(
                                         state.mahasiswa.total.toString(),
-                                        style: blackTextStyle.copyWith(
-                                          fontSize: 32,
+                                        style: blueTextStyle.copyWith(
+                                          fontSize: 26,
                                           fontWeight: semiBold,
                                         ),
                                       ),
@@ -626,14 +626,14 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                     children: [
                                       Text(
                                         'Mahasiswa Aktif',
-                                        style: blackTextStyle.copyWith(
+                                        style: greenTextStyle.copyWith(
                                           fontSize: 14,
                                         ),
                                       ),
                                       Text(
                                         state.mahasiswa.aktif.toString(),
-                                        style: blackTextStyle.copyWith(
-                                          fontSize: 32,
+                                        style: greenTextStyle.copyWith(
+                                          fontSize: 26,
                                           fontWeight: semiBold,
                                         ),
                                       ),
@@ -684,14 +684,14 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                     children: [
                                       Text(
                                         'Mahasiswa Laki-laki',
-                                        style: blackTextStyle.copyWith(
+                                        style: yellowTextStyle.copyWith(
                                           fontSize: 14,
                                         ),
                                       ),
                                       Text(
                                         state.mahasiswa.pria.toString(),
-                                        style: blackTextStyle.copyWith(
-                                          fontSize: 32,
+                                        style: yellowTextStyle.copyWith(
+                                          fontSize: 26,
                                           fontWeight: semiBold,
                                         ),
                                       ),
@@ -749,7 +749,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       Text(
                                         state.mahasiswa.perempuan.toString(),
                                         style: blackTextStyle.copyWith(
-                                          fontSize: 32,
+                                          fontSize: 26,
                                           fontWeight: semiBold,
                                         ),
                                       ),

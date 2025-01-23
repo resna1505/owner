@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:kampus/blocs/nilai_approve/nilai_approve_bloc.dart';
 import 'package:kampus/blocs/nilai_non_approve/nilai_non_approve_bloc.dart';
 import 'package:kampus/shared/shared_methods.dart';
+import 'package:kampus/shared/shared_values.dart';
 import 'package:kampus/shared/theme.dart';
 import 'package:kampus/ui/widgets/buttons.dart';
 import 'package:kampus/ui/widgets/list_approve_nilai.dart';
@@ -37,8 +38,7 @@ class _AssessmentPageState extends State<AssessmentPage> {
 
     try {
       final response = await http.post(
-        Uri.parse(
-            'https://ams-api-dev.univbatam.ac.id/index.php/owner/prosesapprovalkrs'),
+        Uri.parse('$baseUrl/owner/prosesapprovalkrs'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(payload),
       );

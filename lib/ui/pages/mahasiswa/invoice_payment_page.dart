@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http; // Tambahkan paket http
 import 'package:kampus/blocs/discount_approve/discount_approve_bloc.dart';
 import 'package:kampus/blocs/discount_mahasiswa/discount_mahasiswa_bloc.dart';
 import 'package:kampus/shared/shared_methods.dart';
+import 'package:kampus/shared/shared_values.dart';
 import 'package:kampus/shared/theme.dart';
 import 'package:kampus/ui/widgets/buttons.dart';
 import 'package:kampus/ui/widgets/list_paid.dart';
@@ -36,8 +37,7 @@ class _InvoicePaymentPageState extends State<InvoicePaymentPage> {
 
     try {
       final response = await http.post(
-        Uri.parse(
-            'https://ams-api-dev.univbatam.ac.id/index.php/owner/prosesapprovaldiskon'),
+        Uri.parse('$baseUrl/owner/prosesapprovaldiskon'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(payload),
       );

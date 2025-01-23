@@ -9,6 +9,7 @@ Color greyDarkColor = const Color(0xff808080);
 Color redColor = const Color(0xffFB344F);
 Color greenColor = const Color(0xff41B983);
 Color purpleColor = const Color(0xff1265A8);
+Color yellowColor = const Color(0xFFFF9800);
 Color blueSoftColor = const Color(0xff9CD5ED);
 Color blueDarkColor = const Color(0xff00AEEF);
 
@@ -22,6 +23,7 @@ TextStyle greyDarkTextStyle = GoogleFonts.poppins(color: greyDarkColor);
 TextStyle redTextStyle = GoogleFonts.poppins(color: redColor);
 TextStyle blueTextStyle = GoogleFonts.poppins(color: purpleColor);
 TextStyle greenTextStyle = GoogleFonts.poppins(color: greenColor);
+TextStyle yellowTextStyle = GoogleFonts.poppins(color: yellowColor);
 
 FontWeight light = FontWeight.w300;
 FontWeight regular = FontWeight.w400;

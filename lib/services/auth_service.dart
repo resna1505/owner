@@ -4,13 +4,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:kampus/models/sign_in_form_model.dart';
 import 'package:kampus/models/user_model.dart';
+import 'package:kampus/shared/shared_values.dart';
 
 class AuthService {
   Future<UserModel> login(SignInFormModel data) async {
     try {
       final res = await http.post(
-        Uri.parse(
-            'https://ams-api-dev.univbatam.ac.id/index.php/authenticate/owner'),
+        Uri.parse('$baseUrl/authenticate/owner'),
         body: data.toJson(),
       );
 
