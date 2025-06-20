@@ -85,7 +85,7 @@ class AuthService {
   Future<String> getIdMahasiswa() async {
     String idMahasiswa = '';
     const storage = FlutterSecureStorage();
-    String? value = await storage.read(key: 'id');
+    String? value = await storage.read(key: 'email');
 
     if (value != null) {
       idMahasiswa = value;

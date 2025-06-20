@@ -106,7 +106,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
               icon: Image.asset(
                 'assets/ic_account.png',
                 width: 25,
-                color: _currentIndex == 4 ? purpleColor : greyColor,
+                color: _currentIndex == 1 ? purpleColor : greyColor,
               ),
               label: 'Account',
             ),
@@ -814,7 +814,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
         }
       },
       builder: (context, state) {
-        if (state is AuthSuccess) {
+        if (state is AuthFailed || state is AuthSuccess) {
           return Container(
             padding: const EdgeInsets.only(
               left: 20,

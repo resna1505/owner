@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     CustomFilledButton(
                       title: 'Log In',
-                      width: 300,
+                      width: double.infinity,
                       onPressed: () {
                         // Navigator.pushNamedAndRemoveUntil(
                         //     context, '/home-page-mahasiswa', (route) => false);

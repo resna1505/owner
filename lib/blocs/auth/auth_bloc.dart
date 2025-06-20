@@ -35,22 +35,37 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       }
 
+      // if (event is AuthUpadatePassword) {
+      //   try {
+      //     if (state is AuthSuccess) {
+      //       final updatedUser = (state as AuthSuccess).user.copyWith(
+      //             password: event.newPassword,
+      //           );
+
+      //       emit(AuthLoading());
+
+      //       await UserService().updatePassword(
+      //         event.oldPassword,
+      //         event.newPassword,
+      //       );
+
+      //       emit(AuthSuccess(updatedUser));
+      //     }
+      //   } catch (e) {
+      //     emit(AuthFailed(e.toString()));
+      //   }
+      // }
+
       if (event is AuthUpadatePassword) {
         try {
-          if (state is AuthSuccess) {
-            final updatedUser = (state as AuthSuccess).user.copyWith(
-                  password: event.newPassword,
-                );
+          emit(AuthLoading());
 
-            emit(AuthLoading());
+          await UserService().updatePassword(
+            event.oldPassword,
+            event.newPassword,
+          );
 
-            await UserService().updatePassword(
-              event.oldPassword,
-              event.newPassword,
-            );
-
-            emit(AuthSuccess(updatedUser));
-          }
+          emit(AuthInitial());
         } catch (e) {
           emit(AuthFailed(e.toString()));
         }

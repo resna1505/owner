@@ -50,45 +50,83 @@ class _ManageAccountState extends State<ManageAccount> {
               child: CircularProgressIndicator(),
             );
           }
-          return ListView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-            ),
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              CustomFormField(
-                title: 'Kata Sandi Lama',
-                obscureText: true,
-                controller: passwordCurrentController,
-              ),
-              CustomFormField(
-                title: 'Kata Sandi Baru',
-                obscureText: true,
-                controller: passwordNewController,
-              ),
-              // const CustomFormField(
-              //   title: 'Masukkan Lagi Password Baru',
-              //   obscureText: true,
-              // ),
-              const SizedBox(
-                height: 30,
-              ),
-              CustomFilledButton(
-                title: 'Simpan',
-                width: 300,
-                onPressed: () {
-                  context.read<AuthBloc>().add(
-                        AuthUpadatePassword(
-                          passwordCurrentController.text,
-                          passwordNewController.text,
-                        ),
-                      );
-                },
-              )
-            ],
-          );
+
+          // Tambahkan pengecekan agar hanya render ListView kalau bukan error
+          if (state is AuthFailed ||
+              state is AuthInitial ||
+              state is AuthSuccess) {
+            return ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              children: [
+                const SizedBox(height: 10),
+                CustomFormField(
+                  title: 'Kata Sandi Lama',
+                  obscureText: true,
+                  controller: passwordCurrentController,
+                ),
+                CustomFormField(
+                  title: 'Kata Sandi Baru',
+                  obscureText: true,
+                  controller: passwordNewController,
+                ),
+                const SizedBox(height: 30),
+                CustomFilledButton(
+                  title: 'Simpan',
+                  width: 300,
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          AuthUpadatePassword(
+                            passwordCurrentController.text,
+                            passwordNewController.text,
+                          ),
+                        );
+                  },
+                )
+              ],
+            );
+          }
+
+          // Jika tidak termasuk kondisi di atas, kembalikan widget kosong agar tidak blank
+          return const SizedBox.shrink();
+          // return ListView(
+          //   padding: const EdgeInsets.symmetric(
+          //     horizontal: 24,
+          //   ),
+          //   children: [
+          //     const SizedBox(
+          //       height: 10,
+          //     ),
+          //     CustomFormField(
+          //       title: 'Kata Sandi Lama',
+          //       obscureText: true,
+          //       controller: passwordCurrentController,
+          //     ),
+          //     CustomFormField(
+          //       title: 'Kata Sandi Baru',
+          //       obscureText: true,
+          //       controller: passwordNewController,
+          //     ),
+          //     // const CustomFormField(
+          //     //   title: 'Masukkan Lagi Password Baru',
+          //     //   obscureText: true,
+          //     // ),
+          //     const SizedBox(
+          //       height: 30,
+          //     ),
+          //     CustomFilledButton(
+          //       title: 'Simpan',
+          //       width: 300,
+          //       onPressed: () {
+          //         context.read<AuthBloc>().add(
+          //               AuthUpadatePassword(
+          //                 passwordCurrentController.text,
+          //                 passwordNewController.text,
+          //               ),
+          //             );
+          //       },
+          //     )
+          //   ],
+          // );
         },
       ),
     );
