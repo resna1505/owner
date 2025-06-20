@@ -27,6 +27,15 @@ android {
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
+    signingConfigs {
+        release {
+            keyAlias 'keyalias'
+            keyPassword 'uniba123'
+            storeFile file('C:/Users/resna/OneDrive/Documents/my-release-key.jks')
+            storePassword 'uniba123'
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -49,13 +58,13 @@ android {
         }
         management {
             dimension "appType"
-            applicationId "com.example.owner"
+            applicationId "com.mobile.unibaman"
         }
     }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.owner"
+        applicationId "com.mobile.unibaman"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
@@ -68,7 +77,7 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }
