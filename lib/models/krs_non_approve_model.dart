@@ -1,6 +1,7 @@
 class KrsNonApproveModel {
   final String? approvalKey;
   final String? namaProdi;
+  final String? idProdi;
   final String? angkatan;
   final String? id;
   final String? nama;
@@ -10,6 +11,7 @@ class KrsNonApproveModel {
   KrsNonApproveModel({
     this.approvalKey,
     this.namaProdi,
+    this.idProdi,
     this.angkatan,
     this.id,
     this.nama,
@@ -21,6 +23,7 @@ class KrsNonApproveModel {
       KrsNonApproveModel(
         approvalKey: json['APPROVALKEY'],
         namaProdi: json['PRODI'],
+        idProdi: json['IDPRODI'],
         angkatan: json['ANGKATAN'],
         id: json['NIM'],
         nama: json['NAMAMHS'],

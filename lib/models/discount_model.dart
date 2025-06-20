@@ -1,6 +1,7 @@
 class DiscountModel {
   final String? approvalKey;
   final String? namaProdi;
+  final String? idProdi;
   final String? angkatan;
   final String? id;
   final String? nama;
@@ -13,6 +14,7 @@ class DiscountModel {
   DiscountModel({
     this.approvalKey,
     this.namaProdi,
+    this.idProdi,
     this.angkatan,
     this.id,
     this.nama,
@@ -26,6 +28,7 @@ class DiscountModel {
   factory DiscountModel.fromJson(Map<String, dynamic> json) => DiscountModel(
         approvalKey: json['APPROVALKEY'],
         namaProdi: json['NAMAPRODI'],
+        idProdi: json['IDPRODI'],
         angkatan: json['ANGKATAN'],
         id: json['ID'],
         nama: json['NAMA'],

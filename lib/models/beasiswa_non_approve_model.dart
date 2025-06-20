@@ -1,5 +1,6 @@
 class BeasiswaNonApproveModel {
   final String? approvalKey;
+  final String? idProdi;
   final String? namaProdi;
   final String? angkatan;
   final String? id;
@@ -12,6 +13,7 @@ class BeasiswaNonApproveModel {
 
   BeasiswaNonApproveModel({
     this.approvalKey,
+    this.idProdi,
     this.namaProdi,
     this.angkatan,
     this.id,
@@ -27,6 +29,7 @@ class BeasiswaNonApproveModel {
       BeasiswaNonApproveModel(
         approvalKey: json['APPROVALKEY'],
         namaProdi: json['NAMAPRODI'],
+        idProdi: json['IDPRODI'],
         angkatan: json['ANGKATAN'],
         id: json['ID'],
         nama: json['NAMA'],

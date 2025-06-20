@@ -11,6 +11,35 @@ import 'package:kampus/ui/widgets/buttons.dart';
 import 'package:kampus/ui/widgets/list_approve_nilai.dart';
 import 'package:kampus/ui/widgets/list_nonapprove_nilai.dart';
 
+// Model untuk Prodi (sama seperti CardMahasiswaPage)
+class ProdiModel {
+  final String idProdi;
+  final String namaProdi;
+  final String tingkatProdi;
+  final String idDepartemen;
+  final String namaDepartemen;
+
+  ProdiModel({
+    required this.idProdi,
+    required this.namaProdi,
+    required this.tingkatProdi,
+    required this.idDepartemen,
+    required this.namaDepartemen,
+  });
+
+  factory ProdiModel.fromJson(Map<String, dynamic> json) {
+    return ProdiModel(
+      idProdi: json['IDPRODI'] ?? '',
+      namaProdi: json['NAMAPRODI'] ?? '',
+      tingkatProdi: json['TINGKATPRODI'] ?? '',
+      idDepartemen: json['IDDEPARTEMEN'] ?? '',
+      namaDepartemen: json['NAMADEPARTEMEN'] ?? '',
+    );
+  }
+
+  String get displayName => '$namaProdi ($tingkatProdi)';
+}
+
 class AssessmentPage extends StatefulWidget {
   const AssessmentPage({
     super.key,
@@ -24,6 +53,46 @@ class _AssessmentPageState extends State<AssessmentPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
   List<String> _checkedItems = [];
+  List<ProdiModel> _prodiList = [];
+  String? _selectedProdiId;
+  bool _isLoadingProdi = true;
+  bool _selectAll = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProdiData();
+  }
+
+  // Fetch data prodi dari API
+  Future<void> _fetchProdiData() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'https://ams-api-dev.univbatam.ac.id/index.php/akademik/prodi'),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _prodiList = data.map((item) => ProdiModel.fromJson(item)).toList();
+          _isLoadingProdi = false;
+        });
+      } else {
+        setState(() {
+          _isLoadingProdi = false;
+        });
+        showSnackbar(context, 'Error', 'Failed to load prodi data', 'error');
+      }
+    } catch (e) {
+      setState(() {
+        _isLoadingProdi = false;
+      });
+      showSnackbar(
+          context, 'Error', 'Error loading prodi: ${e.toString()}', 'error');
+    }
+  }
 
   Future<void> _sendData() async {
     if (_checkedItems.isEmpty) {
@@ -59,6 +128,107 @@ class _AssessmentPageState extends State<AssessmentPage> {
     }
   }
 
+  // Widget untuk dropdown filter prodi
+  Widget _buildProdiFilter() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      height: 45,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade500),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          hint: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              'Filter by Prodi',
+              style: blackTextStyle.copyWith(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          value: _selectedProdiId,
+          style: blackTextStyle.copyWith(
+            fontSize: 14,
+          ),
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedProdiId = newValue;
+              _checkedItems.clear();
+              _selectAll = false;
+            });
+          },
+          items: [
+            DropdownMenuItem<String>(
+              value: null,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  'All Prodi',
+                  style: blackTextStyle.copyWith(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
+            ..._prodiList.map<DropdownMenuItem<String>>((ProdiModel prodi) {
+              return DropdownMenuItem<String>(
+                value: prodi.idProdi,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    prodi.displayName,
+                    style: blackTextStyle.copyWith(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Widget untuk checkbox "Select All"
+  Widget _buildSelectAllCheckbox(List<dynamic> filteredData) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Checkbox(
+            value: _selectAll,
+            onChanged: (bool? value) {
+              setState(() {
+                _selectAll = value ?? false;
+                if (_selectAll) {
+                  // Add all filtered items to checked list
+                  _checkedItems.clear();
+                  for (var item in filteredData) {
+                    final id = '${item.approvalKey}';
+                    _checkedItems.add(id);
+                  }
+                } else {
+                  // Clear all selections
+                  _checkedItems.clear();
+                }
+              });
+            },
+          ),
+          Text(
+            'Select All (${filteredData.length} items)',
+            style: blackTextStyle.copyWith(
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -84,13 +254,14 @@ class _AssessmentPageState extends State<AssessmentPage> {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 9),
-                child: const Text('Approve'),
+                child: const Text('Approved'),
               ),
             ],
           ),
         ),
         body: TabBarView(
           children: [
+            // Tab Non Approve
             BlocProvider(
               create: (context) =>
                   NilaiNonApproveBloc()..add(NilaiNonApproveGet()),
@@ -99,57 +270,121 @@ class _AssessmentPageState extends State<AssessmentPage> {
                   if (state is NilaiNonApproveLoading) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is NilaiNonApproveSuccess) {
+                    // Filter data berdasarkan _searchText dan prodi
                     final filteredData = state.nilai.where((nilaiNon) {
                       final nilaiNonName = nilaiNon.nama ?? '';
-                      return nilaiNonName
+                      final matchesSearch = nilaiNonName
                           .toLowerCase()
                           .contains(_searchText.toLowerCase());
+
+                      // Filter berdasarkan prodi (sesuaikan dengan field yang ada di model nilai)
+                      final matchesProdi = _selectedProdiId == null ||
+                          nilaiNon.idProdi ==
+                              _selectedProdiId; // Sesuaikan field ini dengan model nilai Anda
+
+                      return matchesSearch && matchesProdi;
                     }).toList();
 
                     return Column(
                       children: [
+                        // Search Bar
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 16,
+                          ),
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
                               hintText: 'Search by name',
-                              prefixIcon: const Icon(Icons.search),
+                              prefixIcon: const Icon(Icons.search, size: 20),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
+                              isDense: true, // Membuat lebih compact
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 8),
                             ),
                             onChanged: (value) {
                               setState(() {
                                 _searchText = value;
+                                _checkedItems.clear();
+                                _selectAll = false;
                               });
                             },
                           ),
                         ),
+
+                        // Prodi Filter
+                        if (!_isLoadingProdi) _buildProdiFilter(),
+
+                        // Select All Checkbox
+                        if (filteredData.isNotEmpty)
+                          _buildSelectAllCheckbox(filteredData),
+
+                        // Data List
                         Expanded(
-                          child: ListView(
-                            children: filteredData.map((nilaiNonMethod) {
-                              final id = '${nilaiNonMethod.approvalKey}';
-                              return ListNonApproveNilai(
-                                nilaiNonMethod: nilaiNonMethod,
-                                isChecked: _checkedItems.contains(id),
-                                onChanged: (isChecked) {
-                                  setState(() {
-                                    if (isChecked == true) {
-                                      _checkedItems.add(id);
-                                    } else {
-                                      _checkedItems.remove(id);
-                                    }
-                                  });
-                                },
-                              );
-                            }).toList(),
-                          ),
+                          child: filteredData.isEmpty
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 48,
+                                        height: 48,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                                'assets/img_no_data.png'),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'No data found',
+                                        style: blackTextStyle.copyWith(
+                                            fontSize: 14),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : ListView(
+                                  children: filteredData.map((nilaiNonMethod) {
+                                    final id = '${nilaiNonMethod.approvalKey}';
+                                    return ListNonApproveNilai(
+                                      nilaiNonMethod: nilaiNonMethod,
+                                      isChecked: _checkedItems.contains(id),
+                                      onChanged: (isChecked) {
+                                        setState(() {
+                                          if (isChecked == true) {
+                                            _checkedItems.add(id);
+                                          } else {
+                                            _checkedItems.remove(id);
+                                            _selectAll =
+                                                false; // Uncheck select all if any item is unchecked
+                                          }
+
+                                          // Update select all status
+                                          if (_checkedItems.length ==
+                                              filteredData.length) {
+                                            _selectAll = true;
+                                          }
+                                        });
+                                      },
+                                    );
+                                  }).toList(),
+                                ),
                         ),
+
+                        // Approval Button
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: CustomFilledButton(
-                            title: 'Approval',
+                            title:
+                                'Approval (${_checkedItems.length} selected)',
                             width: double.infinity,
                             onPressed: _sendData,
                           ),
@@ -159,12 +394,11 @@ class _AssessmentPageState extends State<AssessmentPage> {
                   } else {
                     return Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             width: 48,
                             height: 48,
-                            margin: const EdgeInsets.only(top: 12),
                             decoration: const BoxDecoration(
                               shape: BoxShape.rectangle,
                               image: DecorationImage(
@@ -201,6 +435,8 @@ class _AssessmentPageState extends State<AssessmentPage> {
                 },
               ),
             ),
+
+            // Tab Approve
             BlocProvider(
               create: (context) => NilaiApproveBloc()..add(NilaiApproveGet()),
               child: BlocBuilder<NilaiApproveBloc, NilaiApproveState>(
@@ -208,53 +444,119 @@ class _AssessmentPageState extends State<AssessmentPage> {
                   if (state is NilaiApproveLoading) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is NilaiApproveSuccess) {
+                    // Filter data berdasarkan _searchText dan prodi
                     final filteredData = state.nilai.where((krs) {
                       final krsName = krs.nama ?? '';
-                      return krsName
+                      final matchesSearch = krsName
                           .toLowerCase()
                           .contains(_searchText.toLowerCase());
+
+                      // Filter berdasarkan prodi (sesuaikan dengan field yang ada)
+                      final matchesProdi = _selectedProdiId == null ||
+                          krs.idProdi ==
+                              _selectedProdiId; // Sesuaikan field ini
+
+                      return matchesSearch && matchesProdi;
                     }).toList();
 
                     return Column(
                       children: [
                         // Search Bar
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 16,
+                          ),
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
                               hintText: 'Search by name',
-                              prefixIcon: const Icon(Icons.search),
+                              prefixIcon: const Icon(Icons.search, size: 20),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
+                              isDense: true,
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 8),
                             ),
                             onChanged: (value) {
                               setState(() {
                                 _searchText = value;
+                                _checkedItems.clear();
+                                _selectAll = false;
                               });
                             },
                           ),
                         ),
+
+                        // Prodi Filter
+                        if (!_isLoadingProdi) _buildProdiFilter(),
+
+                        // Data List
                         Expanded(
-                          child: ListView(
-                            children: filteredData.map((nilaiApproveMethod) {
-                              return ListApproveNilai(
-                                  nilaiApproveMethod: nilaiApproveMethod);
-                            }).toList(),
-                          ),
+                          child: filteredData.isEmpty
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 48,
+                                        height: 48,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                                'assets/img_no_data.png'),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text.rich(
+                                        TextSpan(
+                                          text:
+                                              'Oops! Sepertinya kamu tidak\nmemiliki ',
+                                          style: blackTextStyle.copyWith(
+                                              fontSize: 12),
+                                          children: [
+                                            TextSpan(
+                                              text: 'Data Mahasiswa',
+                                              style: blueTextStyle.copyWith(
+                                                fontSize: 12,
+                                                fontWeight: semiBold,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: ' hari ini',
+                                              style: blackTextStyle.copyWith(
+                                                  fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : ListView(
+                                  children:
+                                      filteredData.map((nilaiApproveMethod) {
+                                    return ListApproveNilai(
+                                        nilaiApproveMethod: nilaiApproveMethod);
+                                  }).toList(),
+                                ),
                         ),
                       ],
                     );
                   } else {
                     return Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             width: 48,
                             height: 48,
-                            margin: const EdgeInsets.only(top: 12),
                             decoration: const BoxDecoration(
                               shape: BoxShape.rectangle,
                               image: DecorationImage(
@@ -295,5 +597,11 @@ class _AssessmentPageState extends State<AssessmentPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }

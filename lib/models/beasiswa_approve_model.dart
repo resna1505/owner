@@ -1,5 +1,6 @@
 class BeasiswaApproveModel {
   final String? namaProdi;
+  final String? idProdi;
   final String? angkatan;
   final String? id;
   final String? nama;
@@ -12,6 +13,7 @@ class BeasiswaApproveModel {
 
   BeasiswaApproveModel({
     this.namaProdi,
+    this.idProdi,
     this.angkatan,
     this.id,
     this.nama,
@@ -26,6 +28,7 @@ class BeasiswaApproveModel {
   factory BeasiswaApproveModel.fromJson(Map<String, dynamic> json) =>
       BeasiswaApproveModel(
         namaProdi: json['NAMAPRODI'],
+        idProdi: json['IDPRODI'],
         angkatan: json['ANGKATAN'],
         id: json['ID'],
         nama: json['NAMA'],

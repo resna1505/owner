@@ -1,5 +1,6 @@
 class KrsApproveModel {
   final String? namaProdi;
+  final String? idProdi;
   final String? angkatan;
   final String? id;
   final String? nama;
@@ -9,6 +10,7 @@ class KrsApproveModel {
 
   KrsApproveModel({
     this.namaProdi,
+    this.idProdi,
     this.angkatan,
     this.id,
     this.nama,
@@ -20,6 +22,7 @@ class KrsApproveModel {
   factory KrsApproveModel.fromJson(Map<String, dynamic> json) =>
       KrsApproveModel(
         namaProdi: json['PRODI'],
+        idProdi: json['IDPRODI'],
         angkatan: json['ANGKATAN'],
         id: json['NIM'],
         nama: json['NAMAMHS'],

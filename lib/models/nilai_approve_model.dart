@@ -1,5 +1,6 @@
 class NilaiApproveModel {
   final String? namaProdi;
+  final String? idProdi;
   final String? angkatan;
   final String? id;
   final String? nama;
@@ -11,6 +12,7 @@ class NilaiApproveModel {
 
   NilaiApproveModel({
     this.namaProdi,
+    this.idProdi,
     this.angkatan,
     this.id,
     this.nama,
@@ -24,6 +26,7 @@ class NilaiApproveModel {
   factory NilaiApproveModel.fromJson(Map<String, dynamic> json) =>
       NilaiApproveModel(
         namaProdi: json['PRODI'],
+        idProdi: json['IDPRODI'],
         angkatan: json['ANGKATAN'],
         id: json['NIM'],
         nama: json['NAMAMHS'],
