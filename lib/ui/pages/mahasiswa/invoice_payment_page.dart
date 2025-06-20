@@ -68,8 +68,7 @@ class _InvoicePaymentPageState extends State<InvoicePaymentPage> {
   Future<void> _fetchProdiData() async {
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://ams-api-dev.univbatam.ac.id/index.php/akademik/prodi'),
+        Uri.parse('$baseUrl/akademik/prodi'),
         headers: {"Content-Type": "application/json"},
       );
 
