@@ -23,9 +23,14 @@ class AuthService {
         await storeCredentialToLocal(user);
         return user;
       } else {
-        throw Exception(jsonDecode(res.body)['messages']);
+        // Langsung throw pesan tanpa Exception wrapper
+        throw jsonDecode(res.body)['messages']['error'];
       }
     } catch (e) {
+      // Kalau error dari HTTP request atau parsing, beri pesan generic
+      if (e is FormatException || e is http.ClientException) {
+        throw 'Terjadi kesalahan jaringan';
+      }
       rethrow;
     }
   }

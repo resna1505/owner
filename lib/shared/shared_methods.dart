@@ -2,8 +2,26 @@ import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+// Global variables untuk debouncing
+DateTime? _lastSnackbarTime;
+String? _lastSnackbarMessage;
+
 void showSnackbar(
     BuildContext context, String title, String subtitle, String type) {
+  final now = DateTime.now();
+  final message = '$title: $subtitle';
+
+  // Prevent duplicate dalam 1 detik
+  if (_lastSnackbarTime != null &&
+      _lastSnackbarMessage == message &&
+      now.difference(_lastSnackbarTime!).inMilliseconds < 1000) {
+    print('Preventing duplicate AnimatedSnackBar: $message');
+    return;
+  }
+
+  _lastSnackbarTime = now;
+  _lastSnackbarMessage = message;
+
   // Kondisikan nilai type
   AnimatedSnackBarType snackBarType;
 

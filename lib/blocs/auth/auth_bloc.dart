@@ -10,78 +10,68 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
-    on<AuthEvent>((event, emit) async {
-      if (event is AuthLogin) {
-        try {
-          emit(AuthLoading());
+    // Pisahkan setiap event handler
+    on<AuthLogin>(_onAuthLogin);
+    on<AuthGetCurrentUser>(_onAuthGetCurrentUser);
+    on<AuthUpadatePassword>(_onAuthUpdatePassword);
+    on<AuthLogout>(_onAuthLogout);
+  }
 
-          final user = await AuthService().login(event.data);
+  Future<void> _onAuthLogin(AuthLogin event, Emitter<AuthState> emit) async {
+    try {
+      emit(AuthLoading());
+      final user = await AuthService().login(event.data);
+      emit(AuthSuccess(user));
+    } catch (e) {
+      emit(AuthFailed(e.toString()));
+    }
+  }
 
-          emit(AuthSuccess(user));
-        } catch (e) {
-          emit(AuthFailed(e.toString()));
-        }
-      }
+  Future<void> _onAuthGetCurrentUser(
+      AuthGetCurrentUser event, Emitter<AuthState> emit) async {
+    try {
+      emit(AuthLoading());
+      final SignInFormModel data = await AuthService().getCredentialFromLocal();
+      final UserModel user = await AuthService().login(data);
+      emit(AuthSuccess(user));
+    } catch (e) {
+      emit(AuthFailed(e.toString()));
+    }
+  }
 
-      if (event is AuthGetCurrentUser) {
-        try {
-          emit(AuthLoading());
-          final SignInFormModel data =
-              await AuthService().getCredentialFromLocal();
-          final UserModel user = await AuthService().login(data);
-          emit(AuthSuccess(user));
-        } catch (e) {
-          emit(AuthFailed(e.toString()));
-        }
-      }
+  Future<void> _onAuthUpdatePassword(
+      AuthUpadatePassword event, Emitter<AuthState> emit) async {
+    try {
+      emit(AuthLoading());
 
-      // if (event is AuthUpadatePassword) {
-      //   try {
-      //     if (state is AuthSuccess) {
-      //       final updatedUser = (state as AuthSuccess).user.copyWith(
-      //             password: event.newPassword,
-      //           );
+      final successMessage = await UserService().updatePassword(
+        event.oldPassword,
+        event.newPassword,
+      );
 
-      //       emit(AuthLoading());
+      emit(AuthPasswordUpdateSuccess(successMessage)); // Pakai message dari API
+    } catch (e) {
+      emit(AuthFailed(e.toString()));
+    }
+  }
 
-      //       await UserService().updatePassword(
-      //         event.oldPassword,
-      //         event.newPassword,
-      //       );
+  // Future<void> _onAuthLogout(AuthLogout event, Emitter<AuthState> emit) async {
+  //   try {
+  //     emit(AuthLoading());
+  //     await AuthService().logout();
+  //     emit(AuthLogoutSuccess()); // atau tetap AuthInitial kalau mau
+  //   } catch (e) {
+  //     emit(AuthFailed(e.toString()));
+  //   }
+  // }
 
-      //       emit(AuthSuccess(updatedUser));
-      //     }
-      //   } catch (e) {
-      //     emit(AuthFailed(e.toString()));
-      //   }
-      // }
-
-      if (event is AuthUpadatePassword) {
-        try {
-          emit(AuthLoading());
-
-          await UserService().updatePassword(
-            event.oldPassword,
-            event.newPassword,
-          );
-
-          emit(AuthInitial());
-        } catch (e) {
-          emit(AuthFailed(e.toString()));
-        }
-      }
-
-      if (event is AuthLogout) {
-        try {
-          emit(AuthLoading());
-
-          await AuthService().logout();
-
-          emit(AuthInitial());
-        } catch (e) {
-          emit(AuthFailed(e.toString()));
-        }
-      }
-    });
+  Future<void> _onAuthLogout(AuthLogout event, Emitter<AuthState> emit) async {
+    try {
+      emit(AuthLoading());
+      await AuthService().logout();
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthFailed(e.toString()));
+    }
   }
 }

@@ -28,3 +28,15 @@ class AuthSuccess extends AuthState {
   @override
   List<Object> get props => [user];
 }
+
+// Tambahkan state baru untuk password update
+class AuthPasswordUpdateSuccess extends AuthState {
+  final String message;
+  const AuthPasswordUpdateSuccess(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+// Optional: state untuk logout
+class AuthLogoutSuccess extends AuthState {}

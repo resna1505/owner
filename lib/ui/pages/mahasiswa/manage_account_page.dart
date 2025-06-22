@@ -16,6 +16,34 @@ class ManageAccount extends StatefulWidget {
 class _ManageAccountState extends State<ManageAccount> {
   final passwordCurrentController = TextEditingController(text: '');
   final passwordNewController = TextEditingController(text: '');
+  bool _isSubmitting = false;
+
+  void _updatePassword() {
+    if (_isSubmitting) return;
+
+    if (passwordCurrentController.text.isEmpty) {
+      showSnackbar(
+          context, 'Error', 'Password lama tidak boleh kosong', 'error');
+      return;
+    }
+
+    if (passwordNewController.text.isEmpty) {
+      showSnackbar(
+          context, 'Error', 'Password baru tidak boleh kosong', 'error');
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    context.read<AuthBloc>().add(
+          AuthUpadatePassword(
+            passwordCurrentController.text,
+            passwordNewController.text,
+          ),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +61,34 @@ class _ManageAccountState extends State<ManageAccount> {
         ),
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
+        listenWhen: (previous, current) {
+          return previous.runtimeType != current.runtimeType;
+        },
         listener: (context, state) {
+          if (state is! AuthLoading && _isSubmitting) {
+            setState(() {
+              _isSubmitting = false;
+            });
+          }
+
           if (state is AuthFailed) {
-            // showCustomSnackbar(context, state.e);
             showSnackbar(context, 'Error', state.e, 'error');
+          }
+
+          if (state is AuthPasswordUpdateSuccess) {
+            showSnackbar(context, 'Success', state.message, 'success');
+            passwordCurrentController.clear();
+            passwordNewController.clear();
+
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/login-page', (route) => false);
+          }
+
+          if (state is AuthLogoutSuccess) {
+            showSnackbar(
+                context, 'Success', 'Anda telah berhasil logout', 'success');
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/login-page', (route) => false);
           }
 
           if (state is AuthSuccess) {
@@ -45,90 +97,44 @@ class _ManageAccountState extends State<ManageAccount> {
           }
         },
         builder: (context, state) {
-          if (state is AuthLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          // Tambahkan pengecekan agar hanya render ListView kalau bukan error
-          if (state is AuthFailed ||
-              state is AuthInitial ||
-              state is AuthSuccess) {
-            return ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              children: [
-                const SizedBox(height: 10),
-                CustomFormField(
-                  title: 'Kata Sandi Lama',
-                  obscureText: true,
-                  controller: passwordCurrentController,
-                ),
-                CustomFormField(
-                  title: 'Kata Sandi Baru',
-                  obscureText: true,
-                  controller: passwordNewController,
-                ),
-                const SizedBox(height: 30),
-                CustomFilledButton(
-                  title: 'Simpan',
-                  width: 300,
-                  onPressed: () {
-                    context.read<AuthBloc>().add(
-                          AuthUpadatePassword(
-                            passwordCurrentController.text,
-                            passwordNewController.text,
-                          ),
-                        );
-                  },
-                )
-              ],
-            );
-          }
-
-          // Jika tidak termasuk kondisi di atas, kembalikan widget kosong agar tidak blank
-          return const SizedBox.shrink();
-          // return ListView(
-          //   padding: const EdgeInsets.symmetric(
-          //     horizontal: 24,
-          //   ),
-          //   children: [
-          //     const SizedBox(
-          //       height: 10,
-          //     ),
-          //     CustomFormField(
-          //       title: 'Kata Sandi Lama',
-          //       obscureText: true,
-          //       controller: passwordCurrentController,
-          //     ),
-          //     CustomFormField(
-          //       title: 'Kata Sandi Baru',
-          //       obscureText: true,
-          //       controller: passwordNewController,
-          //     ),
-          //     // const CustomFormField(
-          //     //   title: 'Masukkan Lagi Password Baru',
-          //     //   obscureText: true,
-          //     // ),
-          //     const SizedBox(
-          //       height: 30,
-          //     ),
-          //     CustomFilledButton(
-          //       title: 'Simpan',
-          //       width: 300,
-          //       onPressed: () {
-          //         context.read<AuthBloc>().add(
-          //               AuthUpadatePassword(
-          //                 passwordCurrentController.text,
-          //                 passwordNewController.text,
-          //               ),
-          //             );
-          //       },
-          //     )
-          //   ],
-          // );
+          return AbsorbPointer(
+            absorbing: _isSubmitting,
+            child: Opacity(
+              opacity: _isSubmitting ? 0.7 : 1.0,
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                children: [
+                  const SizedBox(height: 18),
+                  CustomFormField(
+                    title: 'Kata Sandi Lama',
+                    obscureText: true,
+                    controller: passwordCurrentController,
+                  ),
+                  const SizedBox(height: 10),
+                  CustomFormField(
+                    title: 'Kata Sandi Baru',
+                    obscureText: true,
+                    controller: passwordNewController,
+                  ),
+                  const SizedBox(height: 30),
+                  CustomFilledButton(
+                    title: _isSubmitting ? 'Menyimpan...' : 'Simpan',
+                    width: 300,
+                    onPressed: _isSubmitting ? null : _updatePassword,
+                  )
+                ],
+              ),
+            ),
+          );
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    passwordCurrentController.dispose();
+    passwordNewController.dispose();
+    super.dispose();
   }
 }

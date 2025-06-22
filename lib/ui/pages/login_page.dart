@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           // TODO: implement listener
           if (state is AuthFailed) {
-            // showCustomSnackbar(context, state.e);
+            showSnackbar(context, 'Error', state.e, 'error');
             // showSnackbar(context, 'Error',
             //     'Maaf Sesi sudah habis silahkan Login Ulang', 'error');
           }
@@ -158,33 +158,17 @@ class _LoginPageState extends State<LoginPage> {
                       height: 16,
                     ),
                     // Note : Password Input
+                    // CustomFormField(
+                    //   title: 'Password',
+                    //   obscureText: true,
+                    //   controller: passwordController,
+                    // ),
                     CustomFormField(
-                      title: 'Password',
+                      title: 'password',
                       obscureText: true,
                       controller: passwordController,
                     ),
-                    // const SizedBox(
-                    //   height: 8,
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     const Spacer(),
-                    //     const SizedBox(
-                    //       height: 8,
-                    //     ),
-                    //     Column(
-                    //       children: [
-                    //         Text(
-                    //           'Forgot Password',
-                    //           style: redTextStyle.copyWith(
-                    //             fontWeight: semiBold,
-                    //             fontSize: 14,
-                    //           ),
-                    //         )
-                    //       ],
-                    //     )
-                    //   ],
-                    // ),
+
                     const SizedBox(
                       height: 30,
                     ),
