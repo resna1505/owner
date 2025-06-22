@@ -157,12 +157,6 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 16,
                     ),
-                    // Note : Password Input
-                    // CustomFormField(
-                    //   title: 'Password',
-                    //   obscureText: true,
-                    //   controller: passwordController,
-                    // ),
                     CustomFormField(
                       title: 'password',
                       obscureText: true,
@@ -176,8 +170,6 @@ class _LoginPageState extends State<LoginPage> {
                       title: 'Log In',
                       width: double.infinity,
                       onPressed: () {
-                        // Navigator.pushNamedAndRemoveUntil(
-                        //     context, '/home-page-mahasiswa', (route) => false);
                         if (validate()) {
                           context.read<AuthBloc>().add(
                                 AuthLogin(

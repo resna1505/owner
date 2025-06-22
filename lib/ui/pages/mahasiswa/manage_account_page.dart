@@ -84,13 +84,6 @@ class _ManageAccountState extends State<ManageAccount> {
                 context, '/login-page', (route) => false);
           }
 
-          if (state is AuthLogoutSuccess) {
-            showSnackbar(
-                context, 'Success', 'Anda telah berhasil logout', 'success');
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/login-page', (route) => false);
-          }
-
           if (state is AuthSuccess) {
             Navigator.pushNamedAndRemoveUntil(
                 context, '/login-page', (route) => false);

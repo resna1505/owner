@@ -575,7 +575,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       Text(
                                         state.mahasiswa.total.toString(),
                                         style: blueTextStyle.copyWith(
-                                          fontSize: 26,
+                                          fontSize: 22,
                                           fontWeight: semiBold,
                                         ),
                                       ),
@@ -633,7 +633,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       Text(
                                         state.mahasiswa.aktif.toString(),
                                         style: greenTextStyle.copyWith(
-                                          fontSize: 26,
+                                          fontSize: 22,
                                           fontWeight: semiBold,
                                         ),
                                       ),
@@ -691,7 +691,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       Text(
                                         state.mahasiswa.pria.toString(),
                                         style: yellowTextStyle.copyWith(
-                                          fontSize: 26,
+                                          fontSize: 22,
                                           fontWeight: semiBold,
                                         ),
                                       ),
@@ -749,7 +749,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       Text(
                                         state.mahasiswa.perempuan.toString(),
                                         style: blackTextStyle.copyWith(
-                                          fontSize: 26,
+                                          fontSize: 22,
                                           fontWeight: semiBold,
                                         ),
                                       ),

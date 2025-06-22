@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:kampus/blocs/nilai_approve/nilai_approve_bloc.dart';
 import 'package:kampus/blocs/nilai_non_approve/nilai_non_approve_bloc.dart';
+import 'package:kampus/services/auth_service.dart';
 import 'package:kampus/shared/shared_methods.dart';
 import 'package:kampus/shared/shared_values.dart';
 import 'package:kampus/shared/theme.dart';
@@ -99,8 +100,9 @@ class _AssessmentPageState extends State<AssessmentPage> {
       return;
     }
 
+    final idmhs = await AuthService().getIdMahasiswa();
     final payload = {
-      "iduser": "elly",
+      "iduser": idmhs,
       "checklistData": _checkedItems.map((id) => {"approvalkey": id}).toList(),
     };
 

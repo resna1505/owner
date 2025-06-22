@@ -37,6 +37,3 @@ class AuthPasswordUpdateSuccess extends AuthState {
   @override
   List<Object> get props => [message];
 }
-
-// Optional: state untuk logout
-class AuthLogoutSuccess extends AuthState {}

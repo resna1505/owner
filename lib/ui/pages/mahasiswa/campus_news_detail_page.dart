@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kampus/shared/shared_values.dart';
 import 'package:kampus/shared/theme.dart';
 import 'package:kampus/ui/widgets/information_detail.dart';
 
@@ -47,8 +48,7 @@ class CampusNewsDetail extends StatelessWidget {
   }
 
   Future<dynamic> fetchCampusNewsDetail(String id) async {
-    final url =
-        'https://ams-api.univbatam.ac.id/index.php/mahasiswa/detailpengumuman/$id';
+    final url = '$baseUrl/mahasiswa/detailpengumuman/$id';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {

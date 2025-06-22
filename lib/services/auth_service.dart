@@ -23,11 +23,9 @@ class AuthService {
         await storeCredentialToLocal(user);
         return user;
       } else {
-        // Langsung throw pesan tanpa Exception wrapper
         throw jsonDecode(res.body)['messages']['error'];
       }
     } catch (e) {
-      // Kalau error dari HTTP request atau parsing, beri pesan generic
       if (e is FormatException || e is http.ClientException) {
         throw 'Terjadi kesalahan jaringan';
       }
@@ -40,7 +38,7 @@ class AuthService {
       final token = await getToken();
       final res = await http.post(
           Uri.parse(
-            'https://ams-api.univbatam.ac.id/index.php/logout',
+            '$baseUrl/logout',
           ),
           headers: {
             'Authorization': token,

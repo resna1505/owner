@@ -49,21 +49,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.newPassword,
       );
 
-      emit(AuthPasswordUpdateSuccess(successMessage)); // Pakai message dari API
+      await AuthService().logout();
+
+      emit(AuthPasswordUpdateSuccess(successMessage));
     } catch (e) {
       emit(AuthFailed(e.toString()));
     }
   }
-
-  // Future<void> _onAuthLogout(AuthLogout event, Emitter<AuthState> emit) async {
-  //   try {
-  //     emit(AuthLoading());
-  //     await AuthService().logout();
-  //     emit(AuthLogoutSuccess()); // atau tetap AuthInitial kalau mau
-  //   } catch (e) {
-  //     emit(AuthFailed(e.toString()));
-  //   }
-  // }
 
   Future<void> _onAuthLogout(AuthLogout event, Emitter<AuthState> emit) async {
     try {
