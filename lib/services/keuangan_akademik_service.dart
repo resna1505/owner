@@ -7,9 +7,10 @@ import 'package:kampus/shared/shared_values.dart';
 class KeuanganAkademikService {
   Future<KeuanganAkademikModel> getKeuanganAkademik() async {
     try {
+      final currentYear = DateTime.now().year.toString();
       final res = await http.get(
         Uri.parse(
-          '$baseUrl/owner/pendapatan',
+          '$baseUrl/owner/pendapatan?tahun=$currentYear',
         ),
       );
 

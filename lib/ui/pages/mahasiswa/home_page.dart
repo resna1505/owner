@@ -5,18 +5,12 @@ import 'package:kampus/blocs/keuangan_akademik/keuangan_akademik_bloc.dart';
 import 'package:kampus/blocs/total_mahasiswa/total_mahasiswa_bloc.dart';
 import 'package:kampus/services/auth_service.dart';
 import 'package:kampus/shared/shared_methods.dart';
+import 'package:kampus/shared/shared_values.dart';
 import 'package:kampus/shared/theme.dart';
 import 'package:kampus/ui/widgets/home_academy_item.dart';
 import 'package:d_chart/commons/data_model.dart';
-// import 'package:kampus/ui/widgets/build_campus_news.dart';
-// import 'package:kampus/ui/widgets/buttons.dart';
-// import 'package:kampus/ui/widgets/home_campus_news.dart';
-// import 'package:d_chart/commons/axis.dart';
-// import 'package:d_chart/commons/viewport.dart';
-// import 'package:d_chart/ordinal/bar.dart';
-// import 'package:kampus/ui/widgets/home_to_do.dart';
-// import 'package:permission_handler/permission_handler.dart';
-// import 'package:qrscan/qrscan.dart' as scanner;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 List<OrdinalData> ordinalList = [
   OrdinalData(domain: 'Jan', measure: 3.25),
@@ -36,6 +30,33 @@ final ordinalGroup = [
   ),
 ];
 
+class TunggakanService {
+  static Future<String> getTotalTunggakan() async {
+    try {
+      final currentYear = DateTime.now().year.toString();
+
+      // Coba method 1: GET dengan query parameter
+      final response = await http.get(
+        Uri.parse('$baseUrl/owner/tunggakan?tahun=$currentYear'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['TOTALTUNGGAKAN']?.toString() ?? '0';
+      } else {
+        return '0';
+      }
+    } catch (e) {
+      print('Error: $e');
+      return '0';
+    }
+  }
+}
+
 class HomePageMahasiswa extends StatefulWidget {
   const HomePageMahasiswa({super.key});
 
@@ -46,6 +67,20 @@ class HomePageMahasiswa extends StatefulWidget {
 class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
   int _currentIndex = 0;
   String qrResult = "";
+  String totalTunggakan = '0';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  _loadData() async {
+    final total = await TunggakanService.getTotalTunggakan();
+    setState(() {
+      totalTunggakan = total;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -390,63 +425,57 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       ),
                                     ],
                                   ),
-                                  // Text(
-                                  //   '145',
-                                  //   style: blackTextStyle.copyWith(
-                                  //     fontSize: 30,
-                                  //     fontWeight: semiBold,
-                                  //   ),
-                                  // )
                                 ],
                               ),
-                              // Container(
-                              //   margin: const EdgeInsets.symmetric(
-                              //     vertical: 6,
-                              //   ),
-                              //   decoration: BoxDecoration(
-                              //     border: Border.all(
-                              //       color: greySoftColor,
-                              //       width: 1,
-                              //     ),
-                              //   ),
-                              // ),
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //   children: [
-                              //     Text(
-                              //       'SKS Lulus',
-                              //       style: blackTextStyle.copyWith(
-                              //         fontSize: 12,
-                              //       ),
-                              //     ),
-                              //     Text(
-                              //       '143',
-                              //       style: blackTextStyle.copyWith(
-                              //         fontSize: 12,
-                              //       ),
-                              //     )
-                              //   ],
-                              // ),
-                              // const SizedBox(
-                              //   height: 4,
-                              // ),
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //   children: [
-                              //     Text(
-                              //       'SKS Mengulang',
-                              //       style: blackTextStyle.copyWith(
-                              //         fontSize: 12,
-                              //       ),
-                              //     ),
-                              //     Text(
-                              //       '2',
-                              //       style: blackTextStyle.copyWith(
-                              //         fontSize: 12,
-                              //       ),
-                              //     )
-                              //   ],
-                              // ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(
+                            16,
+                          ),
+                          margin: const EdgeInsets.only(bottom: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: whiteColor,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 5.0,
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Total Tunggakan',
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 15,
+                                          fontWeight: semiBold,
+                                        ),
+                                      ),
+                                      Text(
+                                        formatCurrency(
+                                            num.parse(totalTunggakan)),
+                                        style: blueTextStyle.copyWith(
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -459,55 +488,6 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
               },
             ),
           ),
-          // Container(
-          //   padding: const EdgeInsets.symmetric(
-          //     horizontal: 22,
-          //     // vertical: 16,
-          //   ),
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       Text(
-          //         'Keuangan Akademik',
-          //         style: blackTextStyle.copyWith(
-          //           fontSize: 15,
-          //           fontWeight: semiBold,
-          //         ),
-          //       ),
-          //       Text(
-          //         '2024/2025 Genap',
-          //         style: blueTextStyle.copyWith(
-          //           fontSize: 13,
-          //         ),
-          //       ),
-          //       const SizedBox(
-          //         height: 8,
-          //       ),
-          //       AspectRatio(
-          //         aspectRatio: 16 / 9,
-          //         child: DChartBarO(
-          //           groupList: ordinalGroup,
-          //           domainAxis: DomainAxis(
-          //             ordinalViewport: OrdinalViewport('1', 4),
-          //           ),
-          //           measureAxis: const MeasureAxis(
-          //             numericViewport: NumericViewport(0, 4),
-          //           ),
-          //           allowSliding: true,
-          //           barLabelValue: (group, ordinalData, index) {
-          //             return ordinalData.measure.toString();
-          //           },
-          //           animate: true,
-          //           animationDuration: const Duration(milliseconds: 300),
-          //           fillColor: (group, ordinalData, index) {
-          //             if (ordinalData.measure > 0) return blueSoftColor;
-          //             return blueSoftColor;
-          //           },
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           BlocProvider(
             create: (context) => TotalMahasiswaBloc()..add(TotalMahasiswaGet()),
             child: BlocBuilder<TotalMahasiswaBloc, TotalMahasiswaState>(
@@ -575,7 +555,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       Text(
                                         state.mahasiswa.total.toString(),
                                         style: blueTextStyle.copyWith(
-                                          fontSize: 22,
+                                          fontSize: 16,
                                           fontWeight: semiBold,
                                         ),
                                       ),
@@ -633,7 +613,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       Text(
                                         state.mahasiswa.aktif.toString(),
                                         style: greenTextStyle.copyWith(
-                                          fontSize: 22,
+                                          fontSize: 16,
                                           fontWeight: semiBold,
                                         ),
                                       ),
@@ -691,7 +671,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       Text(
                                         state.mahasiswa.pria.toString(),
                                         style: yellowTextStyle.copyWith(
-                                          fontSize: 22,
+                                          fontSize: 16,
                                           fontWeight: semiBold,
                                         ),
                                       ),
@@ -749,7 +729,7 @@ class _HomePageMahasiswaState extends State<HomePageMahasiswa> {
                                       Text(
                                         state.mahasiswa.perempuan.toString(),
                                         style: blackTextStyle.copyWith(
-                                          fontSize: 22,
+                                          fontSize: 16,
                                           fontWeight: semiBold,
                                         ),
                                       ),
